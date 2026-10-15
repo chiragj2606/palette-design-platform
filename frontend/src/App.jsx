@@ -31,16 +31,30 @@ const LEARNING_CARDS = [
   {
     number: "01",
     title: "Responsive rhythm",
-    description: "Carry an idea across contexts without sacrificing its character.",
+    description:
+      "Learn to create layouts that feel balanced across different screen sizes.",
     kind: "dark",
     label: "STUDY EXERCISE",
+    lesson:
+      "Responsive design adapts a layout to different screen sizes while keeping content readable and easy to use. Start with the content hierarchy, then adjust spacing, grids, and typography for smaller screens.",
+    exercise:
+      "Choose a page from your portfolio. Imagine viewing it on a phone with a 390px-wide screen. Identify three changes that would make it easier to use.",
+    takeaway:
+      "Good responsive design preserves the experience, not just the appearance.",
   },
   {
     number: "02",
     title: "Use the machine as a mirror, not a maker.",
-    description: "Reflect on a design decision before reaching for another tool.",
+    description:
+      "Learn to use AI as a thinking partner without losing your design judgment.",
     kind: "light",
     label: "A NOTE ON AI",
+    lesson:
+      "AI can help generate alternatives, summarize research, and challenge assumptions. However, a designer still needs to evaluate accessibility, user needs, originality, and the trade-offs behind every decision.",
+    exercise:
+      "Choose one design decision you made recently. Ask an AI tool for two alternatives, then write down one advantage and one disadvantage of each before deciding what to use.",
+    takeaway:
+      "Use AI to explore possibilities, but make design decisions deliberately.",
   },
 ];
 
@@ -214,6 +228,7 @@ const [editingCommentText, setEditingCommentText] = useState("");
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All work");
   const [selectedDesign, setSelectedDesign] = useState(null);
+  const [selectedLearningCard, setSelectedLearningCard] = useState(null);
 
   // Public creator profile state
 const [publicCreator, setPublicCreator] = useState(null);
@@ -1747,10 +1762,41 @@ async function handleLike(design) {
               {LEARNING_CARDS.map((card) => (
                 <article className={`learning-card learning-${card.kind}`} key={card.number}>
                   <div className="learning-label">{card.number} / {card.label}</div>
-                  <h2>{card.title}</h2><p>{card.description}</p><span className="learning-link">OPEN FIELDNOTE ↗</span>
+                  <h2>{card.title}</h2><p>{card.description}</p><button
+  type="button"
+  className="learning-link"
+  onClick={() => setSelectedLearningCard(card)}
+>
+  OPEN FIELDNOTE ↗
+</button>
                 </article>
               ))}
             </div>
+            {selectedLearningCard && (
+  <article className="market-note learning-detail">
+    <span className="section-overline">
+      FIELDNOTE / {selectedLearningCard.number}
+    </span>
+
+    <h2>{selectedLearningCard.title}</h2>
+
+    <p>{selectedLearningCard.lesson}</p>
+
+    <h3>PUT IT INTO PRACTICE</h3>
+    <p>{selectedLearningCard.exercise}</p>
+
+    <h3>KEY TAKEAWAY</h3>
+    <p>{selectedLearningCard.takeaway}</p>
+
+    <button
+      type="button"
+      className="button-outline"
+      onClick={() => setSelectedLearningCard(null)}
+    >
+      CLOSE FIELDNOTE
+    </button>
+  </article>
+)}
           </section>
         )}
 
