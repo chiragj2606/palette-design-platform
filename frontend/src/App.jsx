@@ -268,31 +268,64 @@ const [editTags, setEditTags] = useState("");
 const [editTools, setEditTools] = useState("");
 
   const loadDesigns = useCallback(async () => {
-    setLoading(true);
+  try {
+    const response = await fetch(`${API}/designs`);
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      throw new Error(result.message || "Could not load designs.");
+    }
+
+    setDesigns(Array.isArray(result.designs) ? result.designs : []);
     setError("");
+  } catch (err) {
+    setError(err.message || "Could not connect to the backend.");
+  } finally {
+    setLoading(false);
+  }
+}, []);
+  useEffect(() => {
+  let cancelled = false;
+
+  async function fetchInitialDesigns() {
     try {
       const response = await fetch(`${API}/designs`);
       const result = await response.json();
+
       if (!response.ok || !result.success) {
-        throw new Error(result.message || "Could not load designs.");
+        throw new Error(
+          result.message || "Could not load designs."
+        );
       }
-      setDesigns(Array.isArray(result.designs) ? result.designs : []);
+
+      if (!cancelled) {
+        setDesigns(
+          Array.isArray(result.designs) ? result.designs : []
+        );
+        setError("");
+      }
     } catch (err) {
-      setError(err.message || "Could not connect to the backend.");
+      if (!cancelled) {
+        setError(
+          err.message || "Could not connect to the backend."
+        );
+      }
     } finally {
-      setLoading(false);
+      if (!cancelled) {
+        setLoading(false);
+      }
     }
-  }, []);
+  }
+
+  fetchInitialDesigns();
+
+  return () => {
+    cancelled = true;
+  };
+}, []);
 
   useEffect(() => {
-    loadDesigns();
-  }, [loadDesigns]);
-
-  useEffect(() => {
-    if (!token) {
-      setUser(null);
-      return undefined;
-    }
+  if (!token) return undefined;
     let cancelled = false;
     async function loadProfile() {
       try {
@@ -319,10 +352,7 @@ const [editTools, setEditTools] = useState("");
   }, [token]);
 
   const loadSavedDesigns = useCallback(async () => {
-    if (!token) {
-      setSavedDesigns([]);
-      return;
-    }
+    
     try {
       const response = await fetch(`${API}/designs/saved`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -338,10 +368,7 @@ const [editTools, setEditTools] = useState("");
   }, [token]);
 
   const loadMyDesigns = useCallback(async () => {
-    if (!token) {
-      setMyDesigns([]);
-      return;
-    }
+    
     try {
       const response = await fetch(`${API}/designs/my-designs`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -389,35 +416,55 @@ const [editTools, setEditTools] = useState("");
     }
   }, []);
 
+  
+
   useEffect(() => {
-  if (!selectedDesign) {
-    setComments([]);
-    setCommentsError("");
-    setNewComment("");
-    setEditingCommentId(null);
-    setEditingCommentText("");
-    return;
+  if (!token) return;
+
+  let cancelled = false;
+
+  async function fetchSavedReferences() {
+    try {
+      const response = await fetch(`${API}/designs/saved`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(
+          result.message || "Could not load saved references."
+        );
+      }
+
+      if (!cancelled) {
+        setSavedDesigns(
+          Array.isArray(result.savedDesigns)
+            ? result.savedDesigns
+            : []
+        );
+      }
+    } catch (err) {
+      if (!cancelled) {
+        setError(
+          err.message || "Could not load saved references."
+        );
+      }
+    }
   }
 
-  loadComments(selectedDesign._id);
+  fetchSavedReferences();
 
-  setNewComment("");
-  setEditingCommentId(null);
-  setEditingCommentText("");
-}, [selectedDesign, loadComments]);
-
-
-  useEffect(() => {
-    if (!token) return;
-    loadSavedDesigns();
-  }, [token, loadSavedDesigns]);
+  return () => {
+    cancelled = true;
+  };
+}, [token]);
 
   // Load the designs liked by the logged-in user
 useEffect(() => {
-  if (!token) {
-    setLikedDesignIds([]);
-    return;
-  }
+  if (!token) return;
 
   let cancelled = false;
 
@@ -459,9 +506,70 @@ useEffect(() => {
 }, [token]);
 
   useEffect(() => {
-    if (page === "Boards") loadSavedDesigns();
-    if (page === "Profile") loadMyDesigns();
-  }, [page, loadSavedDesigns, loadMyDesigns]);
+  if (!token) return;
+
+  let cancelled = false;
+
+  async function loadCurrentPageData() {
+    try {
+      if (page === "Boards") {
+        const response = await fetch(`${API}/designs/saved`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+          throw new Error(
+            result.message || "Could not load saved references."
+          );
+        }
+
+        if (!cancelled) {
+          setSavedDesigns(
+            Array.isArray(result.savedDesigns)
+              ? result.savedDesigns
+              : []
+          );
+        }
+      } else if (page === "Profile") {
+        const response = await fetch(`${API}/designs/my-designs`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+          throw new Error(
+            result.message || "Could not load your work."
+          );
+        }
+
+        if (!cancelled) {
+          setMyDesigns(
+            Array.isArray(result.designs) ? result.designs : []
+          );
+        }
+      }
+    } catch (err) {
+      if (!cancelled) {
+        setError(err.message || "Could not load your account data.");
+      }
+    }
+  }
+
+  if (page === "Boards" || page === "Profile") {
+    loadCurrentPageData();
+  }
+
+  return () => {
+    cancelled = true;
+  };
+}, [page, token]);
 
   const filteredDesigns = useMemo(() => {
     const term = search.trim().toLowerCase();
@@ -530,17 +638,24 @@ useEffect(() => {
   }
 
   function logout() {
-    localStorage.removeItem("palette_token");
-    setToken("");
-    setUser(null);
-    setSavedDesigns([]);
-    setMyDesigns([]);
-    setPage("Discover");
-  }
+  localStorage.removeItem("palette_token");
+  setToken("");
+  setUser(null);
+  setSavedDesigns([]);
+  setMyDesigns([]);
+  setLikedDesignIds([]);
+  setPage("Discover");
+}
 
   function openDesign(design) {
-    setSelectedDesign(design);
-  }
+  setSelectedDesign(design);
+  setComments([]);
+  setCommentsError("");
+  setNewComment("");
+  setEditingCommentId(null);
+  setEditingCommentText("");
+  loadComments(design._id);
+}
 
   function showWorkFeed() {
     setPage("Explore");
@@ -1331,7 +1446,11 @@ async function handleLike(design) {
               ) : error ? (
                 <div className="status-panel status-error">
                   <strong>The index couldn't load.</strong><p>{error}</p>
-                  <button type="button" onClick={loadDesigns}>TRY AGAIN ↗</button>
+                  <button type="button" onClick={() => {
+  setLoading(true);
+  setError("");
+  loadDesigns();
+}}>TRY AGAIN ↗</button>
                 </div>
               ) : designs.length === 0 ? (
                 <div className="status-panel">
