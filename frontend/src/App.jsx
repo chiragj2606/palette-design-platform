@@ -251,6 +251,8 @@ const [profileSkills, setProfileSkills] = useState("");
   const [designTitle, setDesignTitle] = useState("");
   const [designDescription, setDesignDescription] = useState("");
   const [designImageUrl, setDesignImageUrl] = useState("");
+  const [imageUploadBusy, setImageUploadBusy] = useState(false);
+  const [uploadedImageName, setUploadedImageName] = useState("");
   const [designCategory, setDesignCategory] = useState("UI/UX");
   const [designTags, setDesignTags] = useState("");
   const [designTools, setDesignTools] = useState("");
@@ -702,6 +704,71 @@ useEffect(() => {
     });
   }
 }
+
+async function handleImageUpload(event) {
+  const input = event.currentTarget;
+  const file = input.files?.[0];
+
+  if (!file) return;
+
+  const allowedTypes = [
+    "image/jpeg",
+    "image/png",
+    "image/webp",
+    "image/gif",
+  ];
+
+  if (!allowedTypes.includes(file.type)) {
+    setPublishError("Choose a JPG, PNG, WEBP, or GIF image.");
+    input.value = "";
+    return;
+  }
+
+  if (file.size > 5 * 1024 * 1024) {
+    setPublishError("Image size must be 5 MB or less.");
+    input.value = "";
+    return;
+  }
+
+  if (!token) {
+    openAuth("login");
+    input.value = "";
+    return;
+  }
+
+  setImageUploadBusy(true);
+  setPublishError("");
+
+  try {
+    const formData = new FormData();
+    formData.append("image", file);
+
+    const response = await fetch(`${API}/designs/upload`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    });
+
+    const result = await response.json();
+
+    if (!response.ok || !result.success || !result.imageUrl) {
+      throw new Error(result.message || "Image upload failed.");
+    }
+
+    setDesignImageUrl(result.imageUrl);
+    setUploadedImageName(file.name);
+  } catch (err) {
+    setPublishError(
+      err.message || "Could not upload the image. Please try again."
+    );
+  } finally {
+    setImageUploadBusy(false);
+    input.value = "";
+  }
+}
+
   function resetPublishForm() {
     setDesignTitle("");
     setDesignDescription("");
@@ -1787,11 +1854,67 @@ async function handleLike(design) {
                 <input value={designTitle} onChange={(event) => setDesignTitle(event.target.value)} required maxLength={120} placeholder="e.g. A calmer banking app" />
               </label>
 
-              <label>
-                Image URL
-                <input type="url" value={designImageUrl} onChange={(event) => setDesignImageUrl(event.target.value)} required placeholder="https://example.com/my-design.jpg" />
-                <span className="form-help">Use a publicly accessible image URL for now. Direct file uploads will be added separately.</span>
-              </label>
+              
+<label>
+  Upload an image from your device
+  <input
+    type="file"
+    accept="image/jpeg,image/png,image/webp,image/gif"
+    onChange={handleImageUpload}
+    disabled={imageUploadBusy}
+  />
+  <span className="form-help">
+    {imageUploadBusy
+      ? "Uploading image..."
+      : "JPG, PNG, WEBP, or GIF. Maximum size: 5 MB."}
+  </span>
+
+  {uploadedImageName && !imageUploadBusy && (
+  <span className="upload-success" role="status">
+    ✓ Image uploaded successfully: {uploadedImageName}
+  </span>
+)}
+
+</label>
+
+<label>
+  Image URL
+  <input
+    type="url"
+    value={designImageUrl}
+    onChange={(event) => setDesignImageUrl(event.target.value)}
+    required
+    disabled={imageUploadBusy}
+    placeholder="Or paste a public image URL"
+  />
+  <span className="form-help">
+    Upload an image above or paste an existing image URL.
+  </span>
+</label>
+
+{designImageUrl && (
+  <div className="image-upload-preview">
+    <p>Image preview</p>
+    <img
+      src={designImageUrl}
+      alt="Design image preview"
+      style={{
+        width: "100%",
+        maxHeight: "220px",
+        objectFit: "contain",
+      }}
+    />
+    <button
+      type="button"
+      className="button-outline"
+      onClick={() => setDesignImageUrl("")}
+      disabled={imageUploadBusy}
+    >
+      REMOVE IMAGE
+    </button>
+  </div>
+)}
+
 
               <label>
                 Category
@@ -1817,7 +1940,7 @@ async function handleLike(design) {
 
               {publishError && <p className="auth-error" role="alert">{publishError}</p>}
 
-              <button className="button-dark auth-submit" type="submit" disabled={publishBusy}>
+              <button className="button-dark auth-submit" type="submit" disabled={publishBusy || imageUploadBusy}>
                 {publishBusy ? "PUBLISHING…" : "PUBLISH PROJECT ↗"}
               </button>
               <button type="button" className="button-outline cancel-publish" onClick={() => setPublishOpen(false)} disabled={publishBusy}>CANCEL</button>
