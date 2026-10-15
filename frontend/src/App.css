@@ -1683,3 +1683,81 @@
   object-fit: cover;
   background: #eeece5;
 }
+
+
+/* PALETTE — Save notification popup */
+.save-toast {
+  position: fixed;
+  top: 88px;
+  right: 24px;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: max-content;
+  max-width: calc(100vw - 32px);
+  padding: 15px 16px;
+  border: 1px solid #d8d3c8;
+  background: #fbfaf7;
+  color: #292720;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.14);
+  font-size: 12px;
+  line-height: 1.5;
+  animation: save-toast-enter 220ms ease-out;
+}
+
+.save-toast > span:first-child {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 25px;
+  height: 25px;
+  flex: 0 0 25px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  font-weight: 700;
+}
+
+.save-toast-success > span:first-child {
+  color: #347653;
+}
+
+.save-toast-error > span:first-child {
+  color: #b33b32;
+}
+
+.save-toast > button {
+  margin-left: 8px;
+  padding: 0 4px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+@keyframes save-toast-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 600px) {
+  .save-toast {
+    top: 72px;
+    right: 12px;
+    left: 12px;
+    width: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .save-toast {
+    animation: none;
+  }
+}

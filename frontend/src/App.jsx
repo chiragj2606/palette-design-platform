@@ -201,6 +201,16 @@ const [editingCommentText, setEditingCommentText] = useState("");
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [saveNotice, setSaveNotice] = useState(null);
+  useEffect(() => {
+  if (!saveNotice) return;
+
+  const timer = setTimeout(() => {
+    setSaveNotice(null);
+  }, 3000);
+
+  return () => clearTimeout(timer);
+}, [saveNotice]);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All work");
   const [selectedDesign, setSelectedDesign] = useState(null);
@@ -538,25 +548,45 @@ useEffect(() => {
   }
 
   async function handleSave(design, isSaved) {
-    if (!token) {
-      openAuth();
-      return;
-    }
-    try {
-      const response = await fetch(`${API}/designs/${design._id}/save`, {
-        method: isSaved ? "DELETE" : "POST",
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const result = await response.json();
-      if (!response.ok || !result.success) {
-        throw new Error(result.message || "Could not update saved reference.");
-      }
-      await loadSavedDesigns();
-    } catch (err) {
-      setError(err.message);
-    }
+  if (!token) {
+    openAuth("login");
+    return;
   }
 
+  try {
+    const response = await fetch(
+      `${API}/designs/${design._id}/save`,
+      {
+        method: isSaved ? "DELETE" : "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      throw new Error(
+        result.message || "Could not update saved reference."
+      );
+    }
+
+    await loadSavedDesigns();
+
+    setSaveNotice({
+      type: "success",
+      message: isSaved
+        ? "Reference removed successfully."
+        : "Reference saved successfully.",
+    });
+  } catch (err) {
+    setSaveNotice({
+      type: "error",
+      message: err.message || "Could not update saved reference.",
+    });
+  }
+}
   function resetPublishForm() {
     setDesignTitle("");
     setDesignDescription("");
@@ -1140,6 +1170,31 @@ async function handleLike(design) {
 
   return (
     <div className="palette-app">
+    {saveNotice && (
+  <div
+    className={`save-toast ${
+      saveNotice.type === "error"
+        ? "save-toast-error"
+        : "save-toast-success"
+    }`}
+    role="status"
+    aria-live="polite"
+  >
+    <span aria-hidden="true">
+      {saveNotice.type === "error" ? "⚠" : "✓"}
+    </span>
+
+    <span>{saveNotice.message}</span>
+
+    <button
+      type="button"
+      onClick={() => setSaveNotice(null)}
+      aria-label="Dismiss notification"
+    >
+      ×
+    </button>
+  </div>
+)}
       <header className="palette-header">
         <a
           href="#top"
@@ -1549,6 +1604,11 @@ async function handleLike(design) {
       .toUpperCase()
   )}
 </span>
+<div>
+  <h2>{user?.name || "Palette creator"}</h2>
+  <p>@{user?.username || "creator"}</p>
+  <span>{myDesigns.length} published designs</span>
+</div>
                 </div>
 
                 {user?.bio && (
@@ -2150,3 +2210,4 @@ async function handleLike(design) {
 }
 
 export default App;
+
