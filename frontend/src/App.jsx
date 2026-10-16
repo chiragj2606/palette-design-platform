@@ -58,6 +58,48 @@ const LEARNING_CARDS = [
   },
 ];
 
+const MARKET_NOTES = [
+  {
+    number: "01",
+    title: "Trends are signals, not instructions.",
+    description:
+      "Learn to evaluate visual trends before adopting them.",
+    label: "DESIGN TRENDS",
+    content:
+      "A visual trend can signal a change in audience preferences, technology, or culture. But popularity alone does not make a design decision appropriate for every product.",
+    exercise:
+      "Choose a design trend you have noticed recently. Identify its audience, the problem it might solve, and one situation where it would not be suitable.",
+    takeaway:
+      "Understand why a trend works before deciding whether to use it.",
+  },
+  {
+    number: "02",
+    title: "Build a portfolio around decisions.",
+    description:
+      "Show the thinking behind your design work.",
+    label: "CAREER PRACTICE",
+    content:
+      "A strong case study explains the problem, your role, your process, the trade-offs you considered, and what changed because of your work. Screenshots alone may not communicate your contribution.",
+    exercise:
+      "Pick one portfolio project. Write down the problem, your specific contribution, one important design decision, and the result you can honestly demonstrate.",
+    takeaway:
+      "Explain your reasoning and contribution, not just the final visuals.",
+  },
+  {
+    number: "03",
+    title: "Connect design to user needs.",
+    description:
+      "Evaluate designs by usefulness as well as appearance.",
+    label: "PRODUCT THINKING",
+    content:
+      "Design work balances user needs, accessibility, technical constraints, and business goals. A visually impressive interface still needs to help its intended users complete meaningful tasks.",
+    exercise:
+      "Choose one screen from an app you use. Identify its primary user goal, one possible usability barrier, and one improvement you would test.",
+    takeaway:
+      "Good design connects visual choices to real user needs.",
+  },
+];
+
 function NetworkArtwork() {
   const canvasRef = useRef(null);
 
@@ -229,6 +271,7 @@ const [editingCommentText, setEditingCommentText] = useState("");
   const [category, setCategory] = useState("All work");
   const [selectedDesign, setSelectedDesign] = useState(null);
   const [selectedLearningCard, setSelectedLearningCard] = useState(null);
+  const [selectedMarketNote, setSelectedMarketNote] = useState(null);
 
   // Public creator profile state
 const [publicCreator, setPublicCreator] = useState(null);
@@ -1805,12 +1848,56 @@ async function handleLike(design) {
             <div className="section-overline">THE WIDER PICTURE / MARKET NOTES</div>
             <h1 className="inner-heading">Read the<br /><em>signals.</em></h1>
             <p className="inner-intro">A place for observing design movements, understanding expectations, and asking better questions about the work ahead.</p>
-            <div className="market-note">
-              <span className="section-overline">A NOTE ON PRACTICE</span>
-              <h2>Trends are a starting point, not a strategy.</h2>
-              <p>Look at the reason behind a visual shift. Understand its audience, context, and trade-offs before bringing it into your own work.</p>
-              <button type="button" className="button-dark" onClick={() => setPage("Explore")}>STUDY THE INDEX ↗</button>
-            </div>
+            <div className="learning-list">
+  {MARKET_NOTES.map((note, index) => (
+    <article
+      className={`learning-card ${
+        index % 2 === 0 ? "learning-dark" : "learning-light"
+      }`}
+      key={note.number}
+    >
+      <div className="learning-label">
+        {note.number} / {note.label}
+      </div>
+
+      <h2>{note.title}</h2>
+      <p>{note.description}</p>
+
+      <button
+        type="button"
+        className="learning-link"
+        onClick={() => setSelectedMarketNote(note)}
+      >
+        EXPLORE NOTE ↗
+      </button>
+    </article>
+  ))}
+</div>
+
+{selectedMarketNote && (
+  <article className="market-note learning-detail">
+    <span className="section-overline">
+      MARKET NOTE / {selectedMarketNote.number}
+    </span>
+
+    <h2>{selectedMarketNote.title}</h2>
+    <p>{selectedMarketNote.content}</p>
+
+    <h3>PUT IT INTO PRACTICE</h3>
+    <p>{selectedMarketNote.exercise}</p>
+
+    <h3>KEY TAKEAWAY</h3>
+    <p>{selectedMarketNote.takeaway}</p>
+
+    <button
+      type="button"
+      className="button-outline"
+      onClick={() => setSelectedMarketNote(null)}
+    >
+      CLOSE NOTE
+    </button>
+  </article>
+)}
           </section>
         )}
 
