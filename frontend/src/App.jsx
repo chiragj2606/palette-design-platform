@@ -278,6 +278,10 @@ const [publicCreator, setPublicCreator] = useState(null);
 const [creatorDesigns, setCreatorDesigns] = useState([]);
 const [creatorLoading, setCreatorLoading] = useState(false);
 const [creatorError, setCreatorError] = useState("");
+const [isFollowingCreator, setIsFollowingCreator] = useState(false);
+const [creatorFollowersCount, setCreatorFollowersCount] = useState(0);
+const [followBusy, setFollowBusy] = useState(false);
+const [followError, setFollowError] = useState("");
 
   const [token, setToken] = useState(() => localStorage.getItem("palette_token") || "");
   const [user, setUser] = useState(null);
@@ -1064,6 +1068,41 @@ async function openCreatorProfile(username) {
 
     const creator = profileResult.user;
 
+    if (token) {
+  try {
+    const followResponse = await fetch(
+      `${API}/users/${creator._id}/follow-status`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const followResult = await followResponse.json();
+
+    if (!followResponse.ok || !followResult.success) {
+      throw new Error(
+        followResult.message || "Could not load follow status."
+      );
+    }
+
+    setIsFollowingCreator(Boolean(followResult.isFollowing));
+    setCreatorFollowersCount(
+      Number(followResult.followersCount) || 0
+    );
+    setFollowError("");
+  } catch (followErr) {
+    setFollowError(
+      followErr.message || "Could not load follow status."
+    );
+  }
+} else {
+  setIsFollowingCreator(false);
+  setCreatorFollowersCount(0);
+  setFollowError("");
+}
+
     const works = Array.isArray(designsResult.designs)
       ? designsResult.designs.filter(
           (design) =>
@@ -1080,6 +1119,56 @@ async function openCreatorProfile(username) {
     );
   } finally {
     setCreatorLoading(false);
+  }
+}
+
+async function handleToggleFollow() {
+  if (!token) {
+    openAuth("login");
+    return;
+  }
+
+  if (!publicCreator?._id || followBusy) {
+    return;
+  }
+
+  if (user && String(user._id) === String(publicCreator._id)) {
+    setFollowError("You cannot follow yourself.");
+    return;
+  }
+
+  setFollowBusy(true);
+  setFollowError("");
+
+  try {
+    const response = await fetch(
+      `${API}/users/${publicCreator._id}/follow`,
+      {
+        method: isFollowingCreator ? "DELETE" : "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      throw new Error(
+        result.message || "Could not update follow status."
+      );
+    }
+
+    setIsFollowingCreator(Boolean(result.isFollowing));
+    setCreatorFollowersCount(
+      Number(result.followersCount) || 0
+    );
+  } catch (err) {
+    setFollowError(
+      err.message || "Could not update follow status."
+    );
+  } finally {
+    setFollowBusy(false);
   }
 }
 
@@ -1756,6 +1845,30 @@ async function handleLike(design) {
           </div>
         </div>
 
+                <div className="profile-follow-actions">
+          <span>{creatorFollowersCount} followers</span>
+
+          {(!user || String(user._id) !== String(publicCreator._id)) && (
+            <button
+              type="button"
+              className="button-outline"
+              onClick={handleToggleFollow}
+              disabled={followBusy}
+            >
+              {followBusy
+                ? "PLEASE WAIT..."
+                : isFollowingCreator
+                  ? "UNFOLLOW"
+                  : "FOLLOW CREATOR ↗"}
+            </button>
+          )}
+
+          {followError && (
+            <p role="alert" className="status-error">
+              {followError}
+            </p>
+          )}
+        </div>
         {publicCreator.bio && (
           <p className="profile-bio">{publicCreator.bio}</p>
         )}
