@@ -10,6 +10,7 @@ const {
   updateDesign,
   deleteDesign,
   getMyDesigns,
+  getFollowingFeed,
 
 } = require("../controllers/designController");
 
@@ -21,6 +22,9 @@ const router = express.Router();
 router.get("/", getDesigns);
 
 router.get("/my-designs", protect, getMyDesigns);
+
+// Get designs from creators the current user follows
+router.get("/following", protect, getFollowingFeed);    
 
 router.get("/:id", getDesignById);
 

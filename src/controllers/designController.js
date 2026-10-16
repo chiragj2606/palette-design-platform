@@ -1,5 +1,7 @@
 const Design = require("../models/design");
 
+const Follow = require("../models/follow");
+
 // Create a new design
 const createDesign = async (req, res) => {
   try {
@@ -167,6 +169,36 @@ const getMyDesigns = async (req, res) => {
   }
 };
 
+// Get recent designs from creators followed by the current user
+const getFollowingFeed = async (req, res) => {
+  try {
+    const follows = await Follow.find({
+      follower: req.user.userId,
+    }).select("following");
+
+    const followedUserIds = follows.map((follow) => follow.following);
+
+    const designs = await Design.find({
+      creator: { $in: followedUserIds },
+    })
+      .populate(
+        "creator",
+        "name username profileImage bio headline skills"
+      )
+      .sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      success: true,
+      designs,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Could not load your following feed",
+    });
+  }
+};
+
 module.exports = {
   createDesign,
   getDesigns,
@@ -174,5 +206,6 @@ module.exports = {
   updateDesign,
   deleteDesign,
   getMyDesigns,
+  getFollowingFeed,
 
 };

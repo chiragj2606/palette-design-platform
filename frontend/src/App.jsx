@@ -13,6 +13,7 @@ const API =
 const NAV_ITEMS = [
   "Discover",
   "Explore",
+  "Following",
   "Boards",
   "Liked",
   "Learn",
@@ -243,6 +244,9 @@ function NetworkArtwork() {
 function App() {
   const [page, setPage] = useState("Discover");
   const [designs, setDesigns] = useState([]);
+  const [followingDesigns, setFollowingDesigns] = useState([]);
+const [followingLoading, setFollowingLoading] = useState(false);
+const [followingError, setFollowingError] = useState("");
   const [savedDesigns, setSavedDesigns] = useState([]);
   const [myDesigns, setMyDesigns] = useState([]);
   const [likedDesignIds, setLikedDesignIds] = useState([]);
@@ -448,7 +452,44 @@ const [editTools, setEditTools] = useState("");
     }
   }, [token]);
 
-  
+  const loadFollowingDesigns = useCallback(async () => {
+  if (!token) {
+    setFollowingDesigns([]);
+    setFollowingError("");
+    return;
+  }
+
+  setFollowingLoading(true);
+  setFollowingError("");
+
+  try {
+    const response = await fetch(`${API}/designs/following`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      throw new Error(
+        result.message || "Could not load your following feed."
+      );
+    }
+
+    setFollowingDesigns(
+      Array.isArray(result.designs) ? result.designs : []
+    );
+  } catch (err) {
+    setFollowingError(
+      err.message || "Could not load your following feed."
+    );
+  } finally {
+    setFollowingLoading(false);
+  }
+}, [token]);
+
+
   const loadComments = useCallback(async (designId) => {
     if (!designId) {
       setComments([]);
@@ -1548,9 +1589,14 @@ async function handleLike(design) {
               key={item}
               className={page === item ? "nav-item active" : "nav-item"}
               onClick={() => {
-                setPage(item);
-                window.scrollTo({ top: 0, behavior: "smooth" });
-              }}
+  setPage(item);
+
+  if (item === "Following") {
+    loadFollowingDesigns();
+  }
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}}
             >
               {item}
             </button>
@@ -1710,6 +1756,75 @@ async function handleLike(design) {
             )}
           </section>
         )}
+
+        
+        {page === "Following" && (
+  <section className="inner-page">
+    <div className="section-overline">
+      YOUR NETWORK / FOLLOWING
+    </div>
+
+    <h1 className="inner-heading">
+      Your creative<br />
+      <em>circle.</em>
+    </h1>
+
+    <p className="inner-intro">
+      Discover the latest work from the designers you follow.
+    </p>
+
+    {!token ? (
+      <div className="status-panel">
+        <strong>Your creative circle is waiting.</strong>
+        <p>Log in to see work from creators you follow.</p>
+        <button
+          type="button"
+          onClick={() => openAuth("login")}
+        >
+          LOG IN TO VIEW FEED ↗
+        </button>
+      </div>
+    ) : followingLoading ? (
+      <div className="status-panel">
+        Loading your following feed…
+      </div>
+    ) : followingError ? (
+      <div className="status-panel status-error">
+        <strong>Couldn't load your feed.</strong>
+        <p>{followingError}</p>
+        <button
+          type="button"
+          onClick={loadFollowingDesigns}
+        >
+          TRY AGAIN ↗
+        </button>
+      </div>
+    ) : followingDesigns.length > 0 ? (
+      <div className="work-grid">
+        {followingDesigns.map((design, index) =>
+          renderDesignCard(design, index)
+        )}
+      </div>
+    ) : (
+      <div className="status-panel">
+        <strong>Your creative circle starts here.</strong>
+        <p>
+          Follow designers whose work inspires you.
+          Their latest published designs will appear here.
+        </p>
+        <button
+          type="button"
+          onClick={() => {
+            setPage("Explore");
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+        >
+          DISCOVER CREATORS ↗
+        </button>
+      </div>
+    )}
+  </section>
+)}
 
         {page === "Boards" && (
           <section className="inner-page">
