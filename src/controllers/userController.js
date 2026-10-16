@@ -45,7 +45,9 @@ res.status(201).json({
 // Get all users
 const getUsers = async (req, res) => {
   try {
-    const users = await User.find().select("-password");
+    const users = await User.find().select(
+  "name username profileImage headline bio skills createdAt"
+);
 
     res.status(200).json({
       success: true,
