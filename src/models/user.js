@@ -38,6 +38,13 @@ const userSchema = new mongoose.Schema(
       default: "",
     },
 
+    headline: {
+  type: String,
+  trim: true,
+  default: "",
+  maxlength: 120,
+},
+
     skills: {
       type: [String],
       default: [],

@@ -4,8 +4,16 @@ const bcrypt = require("bcryptjs");
 // Create a new user
 const createUser = async (req, res) => {
   try {
-    const { name, username, email, password, profileImage, bio, skills } =
-      req.body;
+    const {
+  name,
+  username,
+  email,
+  password,
+  profileImage,
+  bio,
+  headline,
+  skills,
+} = req.body;
 
     const hashedPassword = await bcrypt.hash(password, 10);
       const user = await User.create({
@@ -86,7 +94,14 @@ const updateMe = async (req, res) => {
       });
     }
 
-    const { name, username, profileImage, bio, skills } = req.body;
+    const {
+  name,
+  username,
+  profileImage,
+  bio,
+  headline,
+  skills,
+} = req.body;
 
     if (name !== undefined) {
       if (typeof name !== "string" || !name.trim()) {
@@ -127,6 +142,24 @@ const updateMe = async (req, res) => {
       }
       user.bio = bio.trim();
     }
+
+    if (headline !== undefined) {
+  if (typeof headline !== "string") {
+    return res.status(400).json({
+      success: false,
+      message: "Headline must be text",
+    });
+  }
+
+  if (headline.trim().length > 120) {
+    return res.status(400).json({
+      success: false,
+      message: "Headline must be 120 characters or fewer",
+    });
+  }
+
+  user.headline = headline.trim();
+}
 
     if (skills !== undefined) {
       if (
@@ -172,7 +205,7 @@ const getUserByUsername = async (req, res) => {
   try {
     const user = await User.findOne({
       username: req.params.username,
-    }).select("name username profileImage bio skills createdAt");
+    }).select("name username profileImage bio headline skills createdAt");;
 
     if (!user) {
       return res.status(404).json({

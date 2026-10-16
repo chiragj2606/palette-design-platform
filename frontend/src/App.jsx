@@ -299,6 +299,7 @@ const [profileName, setProfileName] = useState("");
 const [profileUsername, setProfileUsername] = useState("");
 const [profileImage, setProfileImage] = useState("");
 const [profileBio, setProfileBio] = useState("");
+const [profileHeadline, setProfileHeadline] = useState("");
 const [profileSkills, setProfileSkills] = useState("");
 
 
@@ -1087,6 +1088,7 @@ function openProfileEditor() {
   setProfileUsername(user?.username || "");
   setProfileImage(user?.profileImage || "");
   setProfileBio(user?.bio || "");
+  setProfileHeadline(user?.headline || "");
   setProfileSkills((user?.skills || []).join(", "));
   setProfileEditError("");
   setProfileEditOpen(true);
@@ -1108,6 +1110,7 @@ async function handleProfileUpdate(event) {
     username: profileUsername.trim(),
     profileImage: profileImage.trim(),
     bio: profileBio.trim(),
+    headline: profileHeadline.trim(),
     skills: profileSkills
       .split(",")
       .map((skill) => skill.trim())
@@ -1744,6 +1747,11 @@ async function handleLike(design) {
           <div>
             <h2>{publicCreator.name || "Palette creator"}</h2>
             <p>@{publicCreator.username}</p>
+            {publicCreator.headline && (
+  <p className="profile-headline">
+    {publicCreator.headline}
+  </p>
+)}
             <span>{creatorDesigns.length} published designs</span>
           </div>
         </div>
@@ -1926,6 +1934,12 @@ async function handleLike(design) {
 <div>
   <h2>{user?.name || "Palette creator"}</h2>
   <p>@{user?.username || "creator"}</p>
+
+  {user?.headline && (
+  <p className="profile-headline">
+    {user.headline}
+  </p>
+)}
   <span>{myDesigns.length} published designs</span>
 </div>
                 </div>
@@ -2167,6 +2181,20 @@ async function handleLike(design) {
             placeholder="What do you create, and what inspires you?"
           />
         </label>
+
+        <label>
+  Professional headline
+  <input
+    type="text"
+    value={profileHeadline}
+    onChange={(event) => setProfileHeadline(event.target.value)}
+    maxLength={120}
+    placeholder="UI/UX Designer | Product Designer | Figma"
+  />
+  <span className="form-help">
+    Describe your professional focus in 120 characters or fewer.
+  </span>
+</label>
 
         <label>
           Skills
