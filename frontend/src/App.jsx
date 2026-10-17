@@ -244,6 +244,12 @@ function NetworkArtwork() {
 function App() {
   const [page, setPage] = useState("Discover");
   const [designs, setDesigns] = useState([]);
+  const [exploreDesigns, setExploreDesigns] = useState([]);
+const [explorePage, setExplorePage] = useState(1);
+const [exploreHasNextPage, setExploreHasNextPage] = useState(false);
+const [exploreLoading, setExploreLoading] = useState(false);
+const [exploreError, setExploreError] = useState("");
+const [exploreTotal, setExploreTotal] = useState(0);
   const [followingDesigns, setFollowingDesigns] = useState([]);
 const [followingLoading, setFollowingLoading] = useState(false);
 const [followingError, setFollowingError] = useState("");
@@ -490,6 +496,46 @@ const [editTools, setEditTools] = useState("");
 }, [token]);
 
 
+const loadExplorePage = useCallback(async (requestedPage = 1, append = false) => {
+  setExploreLoading(true);
+  setExploreError("");
+
+  try {
+    const response = await fetch(
+      `${API}/designs?page=${requestedPage}&limit=12`
+    );
+
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      throw new Error(
+        result.message || "Could not load Explore designs."
+      );
+    }
+
+    const newDesigns = Array.isArray(result.designs)
+      ? result.designs
+      : [];
+
+    setExploreDesigns((current) =>
+      append ? [...current, ...newDesigns] : newDesigns
+    );
+
+    setExplorePage(result.pagination?.page ?? requestedPage);
+    setExploreHasNextPage(
+      Boolean(result.pagination?.hasNextPage)
+    );
+    setExploreTotal(Number(result.pagination?.total) || 0);
+  } catch (err) {
+    setExploreError(
+      err.message || "Could not load Explore designs."
+    );
+  } finally {
+    setExploreLoading(false);
+  }
+}, []);
+
+
   const loadComments = useCallback(async (designId) => {
     if (!designId) {
       setComments([]);
@@ -679,7 +725,7 @@ useEffect(() => {
 
   const filteredDesigns = useMemo(() => {
     const term = search.trim().toLowerCase();
-    return designs.filter((design) => {
+    return exploreDesigns.filter((design) => {
       const searchable = [
         design.title,
         design.description,
@@ -694,7 +740,7 @@ useEffect(() => {
         (category === "Product Design" && design.category?.toLowerCase().includes("ui/ux"));
       return categoryMatches && searchable.includes(term);
     });
-  }, [designs, search, category]);
+  }, [exploreDesigns, search, category]);
 
   async function handleAuth(event) {
     event.preventDefault();
@@ -1595,6 +1641,10 @@ async function handleLike(design) {
     loadFollowingDesigns();
   }
 
+  if (item === "Explore") {
+    loadExplorePage(1, false);
+  }
+
   window.scrollTo({ top: 0, behavior: "smooth" });
 }}
             >
@@ -1746,12 +1796,90 @@ async function handleLike(design) {
                 </button>
               ))}
             </div>
-            {error ? <div className="status-panel status-error">{error}</div> : loading ? <div className="status-panel">Loading references…</div> : filteredDesigns.length ? (
-              <div className="work-grid">{filteredDesigns.map((design, index) => renderDesignCard(design, index))}</div>
+                        {exploreError && (
+              <div className="status-panel status-error">
+                <strong>Explore couldn't load.</strong>
+                <p>{exploreError}</p>
+                <button
+                  type="button"
+                  onClick={() => loadExplorePage(1, false)}
+                >
+                  TRY AGAIN ↗
+                </button>
+              </div>
+            )}
+
+            {exploreLoading && exploreDesigns.length === 0 ? (
+              <div className="status-panel">
+                Loading references…
+              </div>
+            ) : filteredDesigns.length > 0 ? (
+              <>
+                <p className="section-overline">
+                  Showing {filteredDesigns.length} matching designs
+                  from {exploreDesigns.length} loaded · {exploreTotal} total
+                </p>
+
+                <div className="work-grid">
+                  {filteredDesigns.map((design, index) =>
+                    renderDesignCard(design, index)
+                  )}
+                </div>
+
+                {exploreHasNextPage && (
+                  <div style={{ display: "flex", justifyContent: "center", marginTop: "28px" }}>
+                    <button
+                      type="button"
+                      className="button-outline"
+                      onClick={() =>
+                        loadExplorePage(explorePage + 1, true)
+                      }
+                      disabled={exploreLoading}
+                    >
+                      {exploreLoading ? "LOADING…" : "LOAD MORE ↗"}
+                    </button>
+                  </div>
+                )}
+              </>
+            ) : exploreLoading ? (
+              <div className="status-panel">
+                Loading references…
+              </div>
             ) : (
               <div className="status-panel">
-                <strong>No references match those filters.</strong><p>Try another search or category.</p>
-                <button type="button" onClick={() => { setSearch(""); setCategory("All work"); }}>RESET FILTERS ↗</button>
+                <strong>
+                  {exploreDesigns.length === 0
+                    ? "The index is taking shape."
+                    : "No loaded references match those filters."}
+                </strong>
+
+                <p>
+                  {exploreDesigns.length === 0
+                    ? "Published work will appear here as the creative community grows."
+                    : "Try another search or category. Load more designs to search further."}
+                </p>
+
+                {exploreHasNextPage && (
+                  <button
+                    type="button"
+                    onClick={() =>
+                      loadExplorePage(explorePage + 1, true)
+                    }
+                    disabled={exploreLoading}
+                  >
+                    LOAD MORE DESIGNS ↗
+                  </button>
+                )}
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSearch("");
+                    setCategory("All work");
+                  }}
+                >
+                  RESET FILTERS ↗
+                </button>
               </div>
             )}
           </section>
