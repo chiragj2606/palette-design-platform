@@ -28,34 +28,323 @@ const CATEGORIES = [
 ];
 const PUBLISH_CATEGORIES = ["UI/UX", "Web Design", "Branding", "Typography", "Illustration", "3D Art", "Other"];
 
-const LEARNING_CARDS = [
+const DESIGN_UNITS = [
   {
-    number: "01",
-    title: "Responsive rhythm",
-    description:
-      "Learn to create layouts that feel balanced across different screen sizes.",
-    kind: "dark",
-    label: "STUDY EXERCISE",
-    lesson:
-      "Responsive design adapts a layout to different screen sizes while keeping content readable and easy to use. Start with the content hierarchy, then adjust spacing, grids, and typography for smaller screens.",
-    exercise:
-      "Choose a page from your portfolio. Imagine viewing it on a phone with a 390px-wide screen. Identify three changes that would make it easier to use.",
-    takeaway:
-      "Good responsive design preserves the experience, not just the appearance.",
+    id: "foundations",
+    title: "Design foundations",
+    description: "Train your eye to recognise good design.",
+    lessons: [
+      {
+        id: "visual-hierarchy",
+        title: "Visual hierarchy",
+        duration: "4 min",
+        xp: 10,
+        explanation:
+          "Visual hierarchy guides people towards the most important information first. Size, colour, spacing, contrast and placement help users understand what to look at.",
+        question:
+          "You want users to notice the main action on a screen. What should you do?",
+        options: [
+          "Make the main action visually prominent",
+          "Make every element equally prominent",
+          "Add more colours everywhere",
+          "Hide the action among other content",
+        ],
+        answer: 0,
+        feedback:
+          "Exactly! A clear visual hierarchy helps people understand what matters first.",
+        challenge:
+  "Open an app you use regularly. Identify the first thing you notice and explain why it attracts your attention.",
+
+practice: {
+  title: "Choose the stronger design",
+  prompt: "Which screen makes the main action easier to notice?",
+  options: [
+    {
+      id: "focused",
+      label: "A",
+      headline: "Your next idea starts here",
+      description: "Everything you need to start creating.",
+      buttonLabel: "Start creating",
+      style: "focused",
+      isCorrect: true,
+      feedback:
+        "Great choice! One clear heading, readable supporting text, and a prominent button create a strong visual hierarchy.",
+    },
+    {
+      id: "crowded",
+      label: "B",
+      headline: "Your next idea starts here",
+      description: "Everything you need to start creating.",
+      buttonLabel: "Start creating",
+      style: "crowded",
+      isCorrect: false,
+      feedback:
+        "Look for competing visual elements. When everything demands attention, the main action becomes harder to find.",
+    },
+  ],
+},
+      },
+      {
+        id: "contrast",
+        title: "Contrast and emphasis",
+        duration: "4 min",
+        xp: 10,
+        explanation:
+          "Contrast makes differences visible. Designers use differences in colour, size, weight and spacing to separate information and highlight important actions.",
+        question:
+          "Which choice usually makes a button easier to distinguish from its background?",
+        options: [
+          "Using the same colour for both",
+          "Using sufficient colour contrast",
+          "Removing the button label",
+          "Making every screen element identical",
+        ],
+        answer: 1,
+        feedback:
+          "Correct! Sufficient contrast helps interface elements stand out and improves readability.",
+        challenge:
+  "Find a button that is difficult to notice on a website. Suggest one change that would improve its visibility.",
+
+practice: {
+  title: "Spot the stronger contrast",
+  prompt:
+    "Which screen makes its main button and text easier to distinguish from the background?",
+  options: [
+    {
+      id: "strong-contrast",
+      label: "A",
+      headline: "Book your session",
+      description: "Choose a time that works for you.",
+      buttonLabel: "Book now",
+      style: "contrast-good",
+      isCorrect: true,
+      feedback:
+        "Great choice! Strong contrast makes text and important actions easier to distinguish from their background.",
+    },
+    {
+      id: "weak-contrast",
+      label: "B",
+      headline: "Book your session",
+      description: "Choose a time that works for you.",
+      buttonLabel: "Book now",
+      style: "contrast-poor",
+      isCorrect: false,
+      feedback:
+        "This design has weaker contrast, so the text and button can be harder to see. Improve the difference between foreground and background.",
+    },
+  ],
+},
+      },
+    ],
   },
   {
-    number: "02",
-    title: "Use the machine as a mirror, not a maker.",
-    description:
-      "Learn to use AI as a thinking partner without losing your design judgment.",
-    kind: "light",
-    label: "A NOTE ON AI",
-    lesson:
-      "AI can help generate alternatives, summarize research, and challenge assumptions. However, a designer still needs to evaluate accessibility, user needs, originality, and the trade-offs behind every decision.",
-    exercise:
-      "Choose one design decision you made recently. Ask an AI tool for two alternatives, then write down one advantage and one disadvantage of each before deciding what to use.",
-    takeaway:
-      "Use AI to explore possibilities, but make design decisions deliberately.",
+    id: "type-and-colour",
+    title: "Typography and colour",
+    description: "Make interfaces readable and intentional.",
+    lessons: [
+      {
+        
+  id: "type-hierarchy",
+  title: "Typography hierarchy",
+  duration: "5 min",
+  xp: 10,
+
+  explanation:
+    "Typography hierarchy uses font size, weight, spacing and placement to distinguish headings, body text, labels and supporting information.",
+
+  question:
+    "How can you make a page heading easier to distinguish from body text?",
+
+  options: [
+    "Give both exactly the same visual treatment",
+    "Remove all spacing between them",
+    "Use a clearer difference in size and weight",
+    "Make the body text harder to read",
+  ],
+
+  answer: 2,
+
+  feedback:
+    "That's right! A deliberate difference in size and weight helps readers scan a page.",
+
+  challenge:
+    "Choose a webpage and identify its heading, subheading and body text. Notice how each level differs.",
+
+  practice: {
+    type: "spot-issue",
+    title: "Spot the typography mistake",
+
+    prompt:
+      "A mobile screen displays a heading and body text. Which choice creates the clearest typography problem?",
+
+    options: [
+      {
+        id: "same-hierarchy",
+        label: "A",
+        text:
+          "The heading and body text are almost the same size and weight.",
+
+        isCorrect: true,
+
+        feedback:
+          "Correct! When headings and body text look almost identical, readers can struggle to tell the most important information from supporting details.",
+      },
+      {
+        id: "clear-heading",
+        label: "B",
+        text:
+          "The heading is larger and heavier than the body text.",
+
+        isCorrect: false,
+
+        feedback:
+          "A clear difference in size and weight usually helps readers recognise the heading.",
+      },
+      {
+        id: "comfortable-spacing",
+        label: "C",
+        text:
+          "The body text has comfortable line spacing.",
+
+        isCorrect: false,
+
+        feedback:
+          "Comfortable line spacing generally improves readability rather than creating a typography hierarchy problem.",
+      },
+      {
+        id: "consistent-labels",
+        label: "D",
+        text:
+          "Small supporting labels use a consistent visual style.",
+
+        isCorrect: false,
+
+        feedback:
+          "Consistent styling helps readers recognise related labels. The important question is whether those labels remain distinguishable from the main heading.",
+      },
+    ],
+  },
+},
+      {
+        id: "colour-meaning",
+        title: "Colour with purpose",
+        duration: "5 min",
+        xp: 10,
+        explanation:
+          "Colour can establish brand identity, group related information and communicate states. Colour choices should also consider contrast, accessibility and cultural context.",
+        question:
+          "What is a good accessibility practice when using colour to show an error?",
+        options: [
+          "Use only a red colour with no other clues",
+          "Remove the error message",
+          "Use colour alongside a clear message or icon",
+          "Make all text low contrast",
+        ],
+        answer: 2,
+        feedback:
+          "Correct! Combining colour with text or an icon means users don't have to rely on colour alone.",
+        challenge:
+          "Find a success or error message in an app. Check whether its meaning is clear without relying only on colour.",
+      },
+    ],
+  },
+  {
+    id: "ui-ux",
+    title: "UI/UX essentials",
+    description: "Design around people and their goals.",
+    lessons: [
+      {
+        id: "user-needs",
+        title: "Understand user needs",
+        duration: "5 min",
+        xp: 15,
+        explanation:
+          "UX design starts by understanding users, their goals, their context and the problems they face. Research helps designers avoid guessing what people need.",
+        question:
+          "Before designing a new banking app, what is a useful first step?",
+        options: [
+          "Choose decorative colours immediately",
+          "Understand users and their banking tasks",
+          "Add as many features as possible",
+          "Copy another app without research",
+        ],
+        answer: 1,
+        feedback:
+          "Exactly! Understanding users and their goals helps shape useful design decisions.",
+        challenge:
+          "Pick an app you use. Write down one important task a user visits it to complete.",
+      },
+      {
+        id: "wireframes",
+        title: "Think in wireframes",
+        duration: "5 min",
+        xp: 15,
+        explanation:
+          "Wireframes are simplified representations of a layout. They help designers plan structure, content and task flow before investing time in detailed visual styling.",
+        question:
+          "Why do designers create wireframes before polishing the visual design?",
+        options: [
+          "To avoid thinking about user tasks",
+          "To test layout and structure early",
+          "To guarantee the product has no problems",
+          "To choose final animations first",
+        ],
+        answer: 1,
+        feedback:
+          "Correct! Wireframes help teams discuss and improve the structure before polishing details.",
+        challenge:
+          "Sketch a simple login screen using boxes and labels. Focus on the order and placement of elements rather than colour.",
+      },
+    ],
+  },
+  {
+    id: "portfolio",
+    title: "Portfolio practice",
+    description: "Turn your design decisions into a story.",
+    lessons: [
+      {
+        id: "case-studies",
+        title: "Tell the project story",
+        duration: "5 min",
+        xp: 15,
+        explanation:
+          "A strong case study explains the problem, your role, your process, important decisions, the outcome and what you learned. It should distinguish your contribution from the team's work.",
+        question:
+          "What makes a design portfolio case study more useful?",
+        options: [
+          "Only showing polished screenshots",
+          "Hiding your role in the project",
+          "Explaining the problem and your design decisions",
+          "Listing tools without context",
+        ],
+        answer: 2,
+        feedback:
+          "Exactly! Showing your reasoning helps others understand how you approach design problems.",
+        challenge:
+          "Choose a project you worked on. Write one sentence about the problem and one about your contribution.",
+      },
+      {
+        id: "iterate",
+        title: "Improve through feedback",
+        duration: "5 min",
+        xp: 15,
+        explanation:
+          "Design is iterative. Feedback and usability testing reveal where people struggle, helping designers refine a solution instead of assuming the first version is perfect.",
+        question:
+          "After users struggle to complete a task in your prototype, what should you do?",
+        options: [
+          "Ignore the feedback",
+          "Investigate the problem and test an improvement",
+          "Assume the users are always wrong",
+          "Remove the entire product immediately",
+        ],
+        answer: 1,
+        feedback:
+          "Well done! Investigating feedback and testing improvements is a central part of iterative design.",
+        challenge:
+          "Ask someone to try a simple screen you designed. Observe one difficulty and write down a possible improvement.",
+      },
+    ],
   },
 ];
 
@@ -280,7 +569,154 @@ const [editingCommentText, setEditingCommentText] = useState("");
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All work");
   const [selectedDesign, setSelectedDesign] = useState(null);
-  const [selectedLearningCard, setSelectedLearningCard] = useState(null);
+  const [selectedDesignLesson, setSelectedDesignLesson] = useState(null);
+  const [selectedStudioChallenge, setSelectedStudioChallenge] = useState(null);
+const [selectedStudioChoice, setSelectedStudioChoice] = useState(null);
+const [studioSubmitted, setStudioSubmitted] = useState(false);
+const [studioAchievementNotice, setStudioAchievementNotice] = useState("");
+const [completedStudioChallenges, setCompletedStudioChallenges] = useState(() => {
+  try {
+    const saved = JSON.parse(
+      localStorage.getItem("palette_studio_completed") || "[]"
+    );
+    return Array.isArray(saved) ? saved : [];
+  } catch {
+    return [];
+  }
+});
+useEffect(() => {
+  localStorage.setItem(
+    "palette_studio_completed",
+    JSON.stringify(completedStudioChallenges)
+  );
+}, [completedStudioChallenges]);
+
+const DESIGN_STUDIO_CHALLENGES = [
+  {
+    id: "clear-cta",
+    title: "Make the main action clear",
+    level: "Beginner",
+    brief:
+      "A signup page has three equally prominent buttons. Users don't know which one to click.",
+    question: "What would improve the visual hierarchy?",
+    options: [
+      "Give the main signup button the strongest visual emphasis",
+      "Make all three buttons larger",
+      "Add more colours to every button",
+    ],
+    answer: 0,
+    feedback:
+      "Correct! A clear primary action helps users understand the next step.",
+  },
+  {
+    id: "readable-type",
+    title: "Fix the typography",
+    level: "Beginner",
+    brief:
+      "A mobile screen uses tiny text for its heading and large text for less important details.",
+    question: "What should you change first?",
+    options: [
+      "Make every text element the same size",
+      "Create a clear type hierarchy for headings and body text",
+      "Use a different font for every sentence",
+    ],
+    answer: 1,
+    feedback:
+      "Correct! A deliberate type hierarchy makes content easier to scan.",
+  },
+  {
+    id: "empty-state",
+    title: "Design a helpful empty state",
+    level: "Beginner",
+    brief:
+      "A user's saved-designs page is empty, and the screen gives no explanation or guidance.",
+    question: "What would make this experience better?",
+    options: [
+      "Leave the screen completely blank",
+      "Show an error message even though nothing is broken",
+      "Explain that no designs are saved and provide a useful next action",
+    ],
+    answer: 2,
+    feedback:
+      "Correct! Helpful empty states explain what's happening and guide users forward.",
+  },
+];
+
+const DESIGN_STUDIO_ACHIEVEMENTS = [
+  {
+    id: "first-step",
+    title: "First Step",
+    description: "Complete your first Studio challenge.",
+    icon: "🏁",
+    requiredCompletions: 1,
+  },
+  {
+    id: "design-explorer",
+    title: "Design Explorer",
+    description: "Complete two Studio challenges.",
+    icon: "🎨",
+    requiredCompletions: 2,
+  },
+  {
+    id: "studio-master",
+    title: "Studio Master",
+    description: "Complete all three Studio challenges.",
+    icon: "🏆",
+    requiredCompletions: 3,
+  },
+];
+
+const [selectedQuizAnswer, setSelectedQuizAnswer] = useState(null);
+const [quizSubmitted, setQuizSubmitted] = useState(false);
+const [selectedPracticeOption, setSelectedPracticeOption] = useState(null);
+
+const [designProgress, setDesignProgress] = useState(() => {
+  const defaultProgress = {
+  completedLessonIds: [],
+  mistakes: [],
+  xp: 0,
+  streak: 0,
+  lastStudyDate: "",
+};
+
+  try {
+    const saved = localStorage.getItem("palette_design_progress");
+
+    if (!saved) return defaultProgress;
+
+    const parsed = JSON.parse(saved);
+
+    if (!parsed || !Array.isArray(parsed.completedLessonIds)) {
+      return defaultProgress;
+    }
+
+    return {
+  completedLessonIds: parsed.completedLessonIds,
+  mistakes: Array.isArray(parsed.mistakes)
+    ? parsed.mistakes
+    : [],
+  xp: Number(parsed.xp) || 0,
+  streak: Number(parsed.streak) || 0,
+  lastStudyDate:
+    typeof parsed.lastStudyDate === "string"
+      ? parsed.lastStudyDate
+      : "",
+};
+  } catch {
+    return defaultProgress;
+  }
+});
+
+useEffect(() => {
+  try {
+    localStorage.setItem(
+      "palette_design_progress",
+      JSON.stringify(designProgress)
+    );
+  } catch {
+    // Learning still works if browser storage is unavailable.
+  }
+}, [designProgress]);
   const [selectedMarketNote, setSelectedMarketNote] = useState(null);
 
   // Public creator profile state
@@ -2161,52 +2597,791 @@ async function handleLike(design) {
 )}
 
         {page === "Learn" && (
-          <section className="inner-page">
-            <div className="section-overline">FIELDNOTES / LEARNING TRAILS</div>
-            <h1 className="inner-heading">Learn to see<br /><em>the decisions.</em></h1>
-            <p className="inner-intro">Short, thoughtful prompts for looking closer, building taste, and making more intentional work.</p>
-            <div className="learning-list">
-              {LEARNING_CARDS.map((card) => (
-                <article className={`learning-card learning-${card.kind}`} key={card.number}>
-                  <div className="learning-label">{card.number} / {card.label}</div>
-                  <h2>{card.title}</h2><p>{card.description}</p><button
-  type="button"
-  className="learning-link"
-  onClick={() => setSelectedLearningCard(card)}
->
-  OPEN FIELDNOTE ↗
-</button>
-                </article>
-              ))}
+  <section className="inner-page learn-page">
+    <div className="section-overline">PALETTE ACADEMY / DESIGN PATH</div>
+
+    
+
+    <div className="learn-hero">
+      <div>
+        <p className="learn-kicker">LEVEL UP YOUR DESIGN EYE</p>
+        <h1 className="inner-heading">
+          Learn design,
+          <br />
+          <em>one small win at a time.</em>
+        </h1>
+        <p className="inner-intro">
+          Short lessons, quick quizzes, and practical challenges to help
+          you become a more thoughtful designer.
+        </p>
+      </div>
+
+      <div className="learn-stats">
+        <div className="learn-stat">
+          <strong>{designProgress.xp}</strong>
+          <span>XP earned</span>
+        </div>
+        <div className="learn-stat">
+          <strong>{designProgress.completedLessonIds.length}</strong>
+          <span>Lessons completed</span>
+        </div>
+        <div className="learn-stat">
+          <strong>{designProgress.streak}</strong>
+          <span>Day streak</span>
+        </div>
+      </div>
+    </div>
+
+{!selectedDesignLesson && (
+  <section className="learn-revision-panel">
+    <div className="learn-revision-heading">
+      <div>
+        <p className="learn-kicker">YOUR PERSONAL REVIEW</p>
+        <h2>Smart revision</h2>
+        <p>Learn from your mistakes and strengthen your design knowledge.</p>
+      </div>
+
+      <span className="learn-revision-count">
+        {designProgress.mistakes.length}
+      </span>
+    </div>
+
+    {designProgress.mistakes.length === 0 ? (
+      <div className="learn-revision-empty">
+        <span className="learn-revision-icon">✦</span>
+        <div>
+          <strong>You're ready to learn.</strong>
+          <p>
+            When you get a quiz question wrong, it will appear here
+            so you can revisit it later.
+          </p>
+        </div>
+      </div>
+    ) : (
+      <div className="learn-revision-list">
+        {designProgress.mistakes.map((mistake) => (
+          <article
+            className="learn-revision-card"
+            key={mistake.lessonId}
+          >
+            <div className="learn-revision-card-top">
+              <span className="learn-revision-tag">
+                NEEDS REVIEW
+              </span>
+
+              <span className="learn-revision-attempts">
+                {mistake.attempts}{" "}
+                {mistake.attempts === 1 ? "attempt" : "attempts"}
+              </span>
             </div>
-            {selectedLearningCard && (
-  <article className="market-note learning-detail">
-    <span className="section-overline">
-      FIELDNOTE / {selectedLearningCard.number}
-    </span>
 
-    <h2>{selectedLearningCard.title}</h2>
+            <h3>{mistake.lessonTitle}</h3>
+            <p className="learn-revision-question">
+              {mistake.question}
+            </p>
 
-    <p>{selectedLearningCard.lesson}</p>
+            <div className="learn-revision-answer">
+              <span>Your previous answer</span>
+              <p>{mistake.chosenAnswer}</p>
+            </div>
 
-    <h3>PUT IT INTO PRACTICE</h3>
-    <p>{selectedLearningCard.exercise}</p>
+            <div className="learn-revision-answer is-correct">
+              <span>Correct answer</span>
+              <p>{mistake.correctAnswer}</p>
+            </div>
 
-    <h3>KEY TAKEAWAY</h3>
-    <p>{selectedLearningCard.takeaway}</p>
+            <button
+              type="button"
+              className="learn-primary"
+              onClick={() => {
+                const lesson = DESIGN_UNITS
+                  .flatMap((unit) =>
+                    unit.lessons.map((item) => ({
+                      ...item,
+                      unitTitle: unit.title,
+                    }))
+                  )
+                  .find((item) => item.id === mistake.lessonId);
 
-    <button
-      type="button"
-      className="button-outline"
-      onClick={() => setSelectedLearningCard(null)}
-    >
-      CLOSE FIELDNOTE
-    </button>
-  </article>
+                if (!lesson) return;
+
+                setSelectedDesignLesson(lesson);
+                setSelectedQuizAnswer(null);
+                setQuizSubmitted(false);
+                setSelectedPracticeOption(null);
+              }}
+            >
+              REVIEW LESSON ↗
+            </button>
+          </article>
+        ))}
+      </div>
+    )}
+  </section>
 )}
-          </section>
+
+
+{!selectedDesignLesson && (
+  <section className="learn-content">
+    <div className="section-overline">HANDS-ON DESIGN</div>
+    <h2>Design Practice Studio</h2>
+    <p className="learn-explanation">
+      Practice real UI/UX decisions through small design challenges.
+      Choose a challenge, think through the problem, and check your answer.
+    </p>
+
+<p className="learn-kicker">
+  STUDIO PROGRESS: {completedStudioChallenges.length} /{" "}
+  {DESIGN_STUDIO_CHALLENGES.length} CHALLENGES COMPLETED
+</p>
+
+{studioAchievementNotice && (
+  <div
+    className="studio-achievement-notice"
+    role="status"
+  >
+    {studioAchievementNotice}
+  </div>
+)}
+
+<section className="studio-achievements">
+  <p className="learn-kicker">🏆 YOUR ACHIEVEMENTS</p>
+
+  <div className="learn-answers">
+    {DESIGN_STUDIO_ACHIEVEMENTS.map((achievement) => {
+      const unlocked =
+        completedStudioChallenges.length >=
+        achievement.requiredCompletions;
+
+      const remaining =
+        achievement.requiredCompletions -
+        completedStudioChallenges.length;
+
+      return (
+        <article className="learn-lesson" key={achievement.id}>
+          <div className="section-overline">
+            {unlocked
+              ? "✓ UNLOCKED"
+              : `🔒 ${remaining} MORE CHALLENGE${remaining === 1 ? "" : "S"}`}
+          </div>
+
+          <h3>
+            {achievement.icon} {achievement.title}
+          </h3>
+
+          <p className="learn-explanation">
+            {achievement.description}
+          </p>
+        </article>
+      );
+    })}
+  </div>
+</section>
+
+    {selectedStudioChallenge ? (
+      <article className="learn-lesson">
+        <button
+          type="button"
+          className="button-outline learn-back"
+          onClick={() => {
+            setSelectedStudioChallenge(null);
+            setSelectedStudioChoice(null);
+            setStudioSubmitted(false);
+          }}
+        >
+          ← ALL CHALLENGES
+        </button>
+
+        <div className="section-overline">
+          {selectedStudioChallenge.level} / DESIGN CHALLENGE
+        </div>
+
+        <h3>{selectedStudioChallenge.title}</h3>
+
+        <p className="learn-explanation">
+          {selectedStudioChallenge.brief}
+        </p>
+
+        <div className="learn-quiz">
+          <p className="learn-kicker">YOUR DESIGN DECISION</p>
+          <h3>{selectedStudioChallenge.question}</h3>
+
+          <div className="learn-answers">
+            {selectedStudioChallenge.options.map((option, index) => (
+              <button
+                type="button"
+                key={option}
+                className={`learn-answer ${
+                  selectedStudioChoice === index ? "is-selected" : ""
+                } ${
+                  studioSubmitted &&
+                  index === selectedStudioChallenge.answer
+                    ? "is-correct"
+                    : ""
+                } ${
+                  studioSubmitted &&
+                  selectedStudioChoice === index &&
+                  selectedStudioChoice !== selectedStudioChallenge.answer
+                    ? "is-wrong"
+                    : ""
+                }`}
+                onClick={() => {
+                  setSelectedStudioChoice(index);
+                  setStudioSubmitted(false);
+                }}
+              >
+                <span className="learn-answer-letter">
+                  {String.fromCharCode(65 + index)}
+                </span>
+                <span>{option}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {studioSubmitted && (
+          <p className="learn-explanation">
+            {selectedStudioChoice === selectedStudioChallenge.answer
+              ? selectedStudioChallenge.feedback
+              : `Not quite! The best answer is: ${
+                  selectedStudioChallenge.options[
+                    selectedStudioChallenge.answer
+                  ]
+                }`}
+          </p>
         )}
 
+        {!studioSubmitted && (
+          <button
+            type="button"
+            className="learn-primary"
+            disabled={selectedStudioChoice === null}
+            onClick={() => {
+  if (selectedStudioChoice === null) return;
+
+  setStudioSubmitted(true);
+
+  if (selectedStudioChoice === selectedStudioChallenge.answer) {
+  if (!completedStudioChallenges.includes(selectedStudioChallenge.id)) {
+    setDesignProgress((current) => ({
+      ...current,
+      xp: (current.xp || 0) + 10,
+    }));
+  }
+
+  if (selectedStudioChoice === selectedStudioChallenge.answer) {
+  const isNewCompletion = !completedStudioChallenges.includes(
+    selectedStudioChallenge.id
+  );
+
+  if (isNewCompletion) {
+    setDesignProgress((current) => ({
+      ...current,
+      xp: (current.xp || 0) + 10,
+    }));
+
+    const newCompletionCount = completedStudioChallenges.length + 1;
+
+    const newlyUnlockedAchievement = DESIGN_STUDIO_ACHIEVEMENTS.find(
+      (achievement) =>
+        achievement.requiredCompletions === newCompletionCount
+    );
+
+    if (newlyUnlockedAchievement) {
+      setStudioAchievementNotice(
+        `🏆 Achievement unlocked: ${newlyUnlockedAchievement.title}!`
+      );
+    }
+  }
+
+  setCompletedStudioChallenges((current) =>
+    current.includes(selectedStudioChallenge.id)
+      ? current
+      : [...current, selectedStudioChallenge.id]
+  );
+}
+}
+}}
+          >
+            CHECK MY DESIGN DECISION
+          </button>
+        )}
+      </article>
+    ) : (
+      <div className="learn-answers">
+        {DESIGN_STUDIO_CHALLENGES.map((challenge) => (
+          <article className="learn-lesson" key={challenge.id}>
+            <div className="section-overline">
+              {challenge.level} / HANDS-ON
+{completedStudioChallenges.includes(challenge.id) && (
+  <span className="studio-completed-badge">✓ COMPLETED</span>
+)}
+            </div>
+
+            <h3>{challenge.title}</h3>
+
+            <p className="learn-explanation">
+              {challenge.brief}
+            </p>
+
+            <button
+              type="button"
+              className="learn-primary"
+              onClick={() => {
+                setSelectedStudioChallenge(challenge);
+                setSelectedStudioChoice(null);
+                setStudioSubmitted(false);
+                setStudioAchievementNotice("");
+              }}
+            >
+              START CHALLENGE ↗
+            </button>
+          </article>
+        ))}
+      </div>
+    )}
+  </section>
+)}
+
+
+    {selectedDesignLesson ? (
+      
+      <div className="learn-content">
+        <button
+          type="button"
+          className="button-outline learn-back"
+          onClick={() => {
+            setSelectedDesignLesson(null);
+            setSelectedQuizAnswer(null);
+            setQuizSubmitted(false);
+          }}
+        >
+          ← BACK TO LEARNING PATH
+        </button>
+
+        <article className="learn-lesson">
+          <div className="section-overline">
+            {selectedDesignLesson.unitTitle} /{" "}
+            {selectedDesignLesson.duration}
+          </div>
+
+          <h2>{selectedDesignLesson.title}</h2>
+          <p className="learn-explanation">
+            {selectedDesignLesson.explanation}
+          </p>
+
+          <div className="learn-quiz">
+            <p className="learn-kicker">QUICK CHECK</p>
+            <h3>{selectedDesignLesson.question}</h3>
+
+            <div className="learn-answers">
+              {selectedDesignLesson.options.map((option, answerIndex) => (
+                <button
+                  type="button"
+                  key={option}
+                  className={`learn-answer ${
+                    selectedQuizAnswer === answerIndex ? "is-selected" : ""
+                  } ${
+                    quizSubmitted &&
+                    answerIndex === selectedDesignLesson.answer
+                      ? "is-correct"
+                      : ""
+                  } ${
+                    quizSubmitted &&
+                    selectedQuizAnswer === answerIndex &&
+                    selectedQuizAnswer !== selectedDesignLesson.answer
+                      ? "is-wrong"
+                      : ""
+                  }`}
+                  onClick={() => {
+                    setSelectedQuizAnswer(answerIndex);
+                    setQuizSubmitted(false);
+                  }}
+                >
+                  <span className="learn-answer-letter">
+                    {String.fromCharCode(65 + answerIndex)}
+                  </span>
+                  <span>{option}</span>
+                </button>
+              ))}
+            </div>
+
+            {!quizSubmitted && (
+              <button
+                type="button"
+                className="learn-primary"
+                disabled={selectedQuizAnswer === null}
+                onClick={() => {
+  if (selectedQuizAnswer === null) return;
+
+  setQuizSubmitted(true);
+
+  if (selectedQuizAnswer === selectedDesignLesson.answer) {
+  setDesignProgress((current) => ({
+    ...current,
+    mistakes: current.mistakes.filter(
+      (mistake) => mistake.lessonId !== selectedDesignLesson.id
+    ),
+  }));
+  return;
+}
+
+  if (selectedQuizAnswer !== selectedDesignLesson.answer) {
+    const lesson = selectedDesignLesson;
+    const now = new Date().toISOString();
+
+    setDesignProgress((current) => {
+      const mistakes = Array.isArray(current.mistakes)
+        ? current.mistakes
+        : [];
+
+      const existingMistake = mistakes.find(
+        (mistake) => mistake.lessonId === lesson.id
+      );
+
+      if (existingMistake) {
+        return {
+          ...current,
+          mistakes: mistakes.map((mistake) =>
+            mistake.lessonId === lesson.id
+              ? {
+                  ...mistake,
+                  attempts: (Number(mistake.attempts) || 1) + 1,
+                  chosenAnswer:
+                    lesson.options[selectedQuizAnswer],
+                  correctAnswer: lesson.options[lesson.answer],
+                  lastAttemptAt: now,
+                }
+              : mistake
+          ),
+        };
+      }
+
+      return {
+        ...current,
+        mistakes: [
+          ...mistakes,
+          {
+            lessonId: lesson.id,
+            lessonTitle: lesson.title,
+            question: lesson.question,
+            chosenAnswer: lesson.options[selectedQuizAnswer],
+            correctAnswer: lesson.options[lesson.answer],
+            attempts: 1,
+            lastAttemptAt: now,
+          },
+        ],
+      };
+    });
+  }
+}}
+              >
+                CHECK ANSWER
+              </button>
+            )}
+
+            {quizSubmitted && (
+              <div
+                className={`learn-feedback ${
+                  selectedQuizAnswer === selectedDesignLesson.answer
+                    ? "is-correct"
+                    : "is-wrong"
+                }`}
+              >
+                <strong>
+                  {selectedQuizAnswer === selectedDesignLesson.answer
+                    ? "Correct! Great work."
+                    : "Not quite. Try again!"}
+                </strong>
+
+                <p>
+                  {selectedQuizAnswer === selectedDesignLesson.answer
+                    ? selectedDesignLesson.feedback
+                    : "Review the lesson and choose another answer."}
+                </p>
+              </div>
+            )}
+          </div>
+
+{selectedDesignLesson.practice && (
+  <section className="learn-practice">
+    <p className="learn-kicker">PRACTICE ROUND · DESIGN EYE</p>
+
+    <h3>{selectedDesignLesson.practice.title}</h3>
+
+    <p className="learn-practice-prompt">
+      {selectedDesignLesson.practice.prompt}
+    </p>
+
+    <div className="learn-practice-grid">
+  {selectedDesignLesson.practice.options.map((option) => (
+    <button
+      type="button"
+      key={option.id}
+      className={`learn-practice-option ${option.style || ""} ${
+        selectedPracticeOption === option.id ? "is-selected" : ""
+      }`}
+      aria-pressed={selectedPracticeOption === option.id}
+      onClick={() => setSelectedPracticeOption(option.id)}
+    >
+      {selectedDesignLesson.practice.type === "spot-issue" ? (
+        <div className="learn-issue-choice">
+          <span className="learn-issue-letter">
+            {option.label}
+          </span>
+
+          <span className="learn-issue-text">
+            {option.text}
+          </span>
+        </div>
+      ) : (
+        <>
+          <div className={`learn-mockup ${option.style}`}>
+            <div className="learn-mockup-topbar">
+              <span />
+              <span />
+              <span />
+              <small>PALETTE STUDIO</small>
+            </div>
+
+            <div className="learn-mockup-content">
+              <span className="learn-mockup-eyebrow">
+                YOUR CREATIVE SPACE
+              </span>
+
+              <strong>{option.headline}</strong>
+
+              <p>{option.description}</p>
+
+              <span className="learn-mockup-button">
+                {option.buttonLabel}
+              </span>
+            </div>
+          </div>
+
+          <div className="learn-practice-label">
+            <strong>SCREEN {option.label}</strong>
+
+            <span>
+              {selectedPracticeOption === option.id
+                ? "✓ Selected"
+                : "Choose this design"}
+            </span>
+          </div>
+        </>
+      )}
+    </button>
+  ))}
+</div>
+
+    {selectedPracticeOption && (
+      <div
+        className={`learn-practice-feedback ${
+          selectedDesignLesson.practice.options.find(
+            (option) => option.id === selectedPracticeOption
+          )?.isCorrect
+            ? "is-correct"
+            : "is-wrong"
+        }`}
+      >
+        <strong>
+          {selectedDesignLesson.practice.options.find(
+            (option) => option.id === selectedPracticeOption
+          )?.isCorrect
+            ? "Great design thinking! ✨"
+            : "Look a little closer 👀"}
+        </strong>
+
+        <p>
+          {
+            selectedDesignLesson.practice.options.find(
+              (option) => option.id === selectedPracticeOption
+            )?.feedback
+          }
+        </p>
+      </div>
+    )}
+  </section>
+)}
+
+          <div className="learn-challenge">
+            <p className="learn-kicker">YOUR DESIGN CHALLENGE</p>
+            <p>{selectedDesignLesson.challenge}</p>
+            <span>Try it in a real app or design project.</span>
+          </div>
+
+          {quizSubmitted &&
+  selectedQuizAnswer === selectedDesignLesson.answer &&
+  (!selectedDesignLesson.practice ||
+    selectedDesignLesson.practice.options.some(
+      (option) =>
+        option.id === selectedPracticeOption && option.isCorrect
+    )) && (
+              <button
+                type="button"
+                className="learn-primary learn-complete"
+                onClick={() => {
+                  setDesignProgress((current) => {
+                    if (
+                      current.completedLessonIds.includes(
+                        selectedDesignLesson.id
+                      )
+                    ) {
+                      return current;
+                    }
+
+                    const now = new Date();
+
+                    const today = [
+                      now.getFullYear(),
+                      String(now.getMonth() + 1).padStart(2, "0"),
+                      String(now.getDate()).padStart(2, "0"),
+                    ].join("-");
+
+                    const yesterdayDate = new Date(now);
+                    yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+
+                    const yesterday = [
+                      yesterdayDate.getFullYear(),
+                      String(yesterdayDate.getMonth() + 1).padStart(2, "0"),
+                      String(yesterdayDate.getDate()).padStart(2, "0"),
+                    ].join("-");
+
+                    const nextStreak =
+                      current.lastStudyDate === today
+                        ? current.streak
+                        : current.lastStudyDate === yesterday
+                          ? current.streak + 1
+                          : 1;
+
+                    return {
+                      completedLessonIds: [
+                        ...current.completedLessonIds,
+                        selectedDesignLesson.id,
+                      ],
+                      xp: current.xp + selectedDesignLesson.xp,
+                      streak: nextStreak,
+                      lastStudyDate: today,
+                    };
+                  });
+
+                  setSelectedDesignLesson(null);
+                  setSelectedPracticeOption(null);
+                  setSelectedQuizAnswer(null);
+                  setQuizSubmitted(false);
+                  
+                  
+                }}
+              >
+                COMPLETE LESSON · +{selectedDesignLesson.xp} XP
+              </button>
+            )}
+        </article>
+      </div>
+    ) : (
+      <div className="learn-path">
+        {DESIGN_UNITS.map((unit, unitIndex) => {
+          const completedInUnit = unit.lessons.filter((lesson) =>
+            designProgress.completedLessonIds.includes(lesson.id)
+          ).length;
+
+          return (
+            <section className="learn-unit" key={unit.id}>
+              <div className="learn-unit-heading">
+                <div>
+                  <p className="learn-kicker">
+                    UNIT {String(unitIndex + 1).padStart(2, "0")}
+                  </p>
+                  <h2>{unit.title}</h2>
+                  <p>{unit.description}</p>
+                </div>
+
+                <span className="learn-unit-count">
+                  {completedInUnit}/{unit.lessons.length}
+                </span>
+              </div>
+
+              <div className="learn-progress-track">
+                <div
+                  className="learn-progress-fill"
+                  style={{
+                    width: `${
+                      (completedInUnit / unit.lessons.length) * 100
+                    }%`,
+                  }}
+                />
+              </div>
+
+              <div className="learn-path-lessons">
+                {unit.lessons.map((lesson, lessonIndex) => {
+                  const previousUnit =
+                    unitIndex > 0 ? DESIGN_UNITS[unitIndex - 1] : null;
+
+                  const previousLesson =
+                    lessonIndex > 0
+                      ? unit.lessons[lessonIndex - 1]
+                      : previousUnit
+                        ? previousUnit.lessons[
+                            previousUnit.lessons.length - 1
+                          ]
+                        : null;
+
+                  const isUnlocked =
+                    !previousLesson ||
+                    designProgress.completedLessonIds.includes(
+                      previousLesson.id
+                    );
+
+                  const isCompleted =
+                    designProgress.completedLessonIds.includes(lesson.id);
+
+                  return (
+                    <button
+                      type="button"
+                      key={lesson.id}
+                      className={`learn-path-lesson ${
+                        isCompleted ? "is-completed" : ""
+                      } ${!isUnlocked ? "is-locked" : ""}`}
+                      disabled={!isUnlocked}
+                      onClick={() => {
+                        setSelectedDesignLesson({
+                          ...lesson,
+                          unitTitle: unit.title,
+                        });
+                        setSelectedQuizAnswer(null);
+                        setQuizSubmitted(false);
+                        setSelectedPracticeOption(null);
+                      }}
+                    >
+                      <span className="learn-path-icon">
+                        {isCompleted ? "✓" : isUnlocked ? "↗" : "🔒"}
+                      </span>
+
+                      <span className="learn-path-copy">
+                        <strong>{lesson.title}</strong>
+                        <small>
+                          {lesson.duration} · {lesson.xp} XP
+                        </small>
+                      </span>
+
+                      <span className="learn-path-status">
+                        {isCompleted
+                          ? "COMPLETED"
+                          : isUnlocked
+                            ? "START"
+                            : "LOCKED"}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </section>
+          );
+        })}
+      </div>
+    )}
+  </section>
+)}
         {page === "Market" && (
           <section className="inner-page">
             <div className="section-overline">THE WIDER PICTURE / MARKET NOTES</div>
