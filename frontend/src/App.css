@@ -3240,3 +3240,127 @@
     font-size: 12px;
   }
 }
+
+/* =========================================
+   PALETTE MARKET — PROFESSIONAL JOB CARDS
+========================================= */
+
+.market-job-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 28px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--white);
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.market-job-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--orange);
+  box-shadow: 0 12px 30px rgba(24, 24, 24, 0.07);
+}
+
+.market-job-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.market-job-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 11px;
+  border: 1px solid rgba(240, 100, 50, 0.25);
+  border-radius: 30px;
+  color: var(--orange);
+  background: var(--orange-light);
+  font-family: var(--mono-font);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.market-job-card h2 {
+  margin: 4px 0;
+  color: var(--ink);
+  font-family: var(--display-font);
+  font-size: clamp(22px, 2.5vw, 30px);
+  line-height: 1.2;
+}
+
+.market-job-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.market-job-meta span,
+.market-job-skills span {
+  padding: 7px 11px;
+  border: 1px solid var(--line);
+  border-radius: 30px;
+  color: var(--muted);
+  background: var(--paper);
+  font-size: 12px;
+}
+
+.market-job-salary {
+  margin: 0;
+  color: var(--ink);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.market-job-description {
+  display: -webkit-box;
+  overflow: hidden;
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.7;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+}
+
+.market-job-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.market-job-action {
+  align-self: flex-start;
+  margin-top: 8px;
+}
+
+@media (max-width: 600px) {
+  .market-job-card {
+    padding: 20px;
+  }
+
+  .market-job-card-top {
+    align-items: flex-start;
+  }
+
+  .market-job-meta {
+    gap: 6px;
+  }
+
+  .market-job-meta span,
+  .market-job-skills span {
+    font-size: 11px;
+  }
+
+  .market-job-action {
+    width: 100%;
+  }
+}

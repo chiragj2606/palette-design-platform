@@ -1127,34 +1127,38 @@ const filteredMarketNotes = MARKET_NOTES.filter((note) => {
     .toLowerCase();
 
   return (
-  matchesCategory &&
-  matchesResourceCategory &&
-  (!normalizedMarketSearch ||
-    searchableText.includes(normalizedMarketSearch))
-);
-});
-
-const filteredMarketResources = MARKET_RESOURCES.filter((resource) => {
-  const matchesCategory =
-    marketCategory === "All" || marketCategory === "Resources";
-    const matchesResourceCategory =
-  marketResourceCategory === "All" ||
-  resource.category === marketResourceCategory;
-
-  const searchableText = [
-    resource.title,
-    resource.category,
-    resource.description,
-    resource.type,
-  ]
-    .filter(Boolean)
-    .join(" ")
-    .toLowerCase();
-
-  return (
     matchesCategory &&
     (!normalizedMarketSearch ||
       searchableText.includes(normalizedMarketSearch))
+  );
+});
+
+
+const filteredMarketResources = MARKET_RESOURCES.filter((resource) => {
+  const matchesMarketCategory =
+    marketCategory === "All" || marketCategory === "Resources";
+
+  const matchesResourceCategory =
+    marketResourceCategory === "All" ||
+    resource.category === marketResourceCategory;
+
+  const matchesSearch =
+    !normalizedMarketSearch ||
+    [
+      resource.title,
+      resource.category,
+      resource.description,
+      resource.type,
+    ]
+      .filter(Boolean)
+      .join(" ")
+      .toLowerCase()
+      .includes(normalizedMarketSearch);
+
+  return (
+    matchesMarketCategory &&
+    matchesResourceCategory &&
+    matchesSearch
   );
 });
 
@@ -3439,26 +3443,55 @@ onClick={() => setProfileMenuOpen(!profileMenuOpen)}      >
 
         <div className="learning-list">
           {filteredMarketJobs.map((job) => (
-            <article
-              className="learning-card learning-light"
-              key={job._id}
-              onClick={() => setSelectedMarketJob(job)}
-              style={{ cursor: "pointer" }}
-            >
-              <div className="learning-label">
-                {job.company} / {job.location}
-              </div>
+  <article
+    className="learning-card learning-light market-job-card"
+    key={job._id}
+  >
+    <div className="market-job-card-top">
+      <div className="learning-label">
+        {job.company} / {job.location || "Location not specified"}
+      </div>
 
-              <h2>{job.title}</h2>
+      {job.status && (
+        <span className="market-job-status">
+          {job.status}
+        </span>
+      )}
+    </div>
 
-              <p>
-                {job.employmentType} · {job.experienceLevel} · {job.workMode}
-              </p>
+    <h2>{job.title}</h2>
 
-              <p>{job.salary}</p>
-              <p>{job.description}</p>
-            </article>
-          ))}
+    <div className="market-job-meta">
+      <span>{job.employmentType}</span>
+      <span>{job.experienceLevel}</span>
+      <span>{job.workMode}</span>
+    </div>
+
+    <p className="market-job-salary">
+      {job.salary || "Compensation not specified"}
+    </p>
+
+    <p className="market-job-description">
+      {job.description}
+    </p>
+
+    {Array.isArray(job.skills) && job.skills.length > 0 && (
+      <div className="market-job-skills">
+        {job.skills.slice(0, 4).map((skill, index) => (
+          <span key={`${skill}-${index}`}>{skill}</span>
+        ))}
+      </div>
+    )}
+
+    <button
+      type="button"
+      className="button-outline market-job-action"
+      onClick={() => setSelectedMarketJob(job)}
+    >
+      VIEW DETAILS & APPLY ↗
+    </button>
+  </article>
+))}
         </div>
         
               </div>
