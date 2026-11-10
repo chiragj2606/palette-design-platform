@@ -3364,3 +3364,194 @@
     width: 100%;
   }
 }
+
+
+/* =========================================
+   PALETTE MARKET — EMPLOYER JOB POSTING
+========================================= */
+
+.market-post-page {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.market-post-hero {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  align-items: end;
+  gap: 48px;
+  margin: 32px 0 64px;
+}
+
+.market-post-hero .inner-heading {
+  margin: 0;
+  font-size: clamp(48px, 7vw, 82px);
+  line-height: 1.05;
+}
+
+.market-post-hero .inner-heading em {
+  color: var(--orange);
+  font-weight: 400;
+}
+
+.market-post-hero .inner-intro {
+  max-width: 390px;
+  margin: 0 0 8px;
+  line-height: 1.8;
+}
+
+.market-post-form {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.market-form-section {
+  padding: 38px 0;
+  border-top: 1px solid var(--line);
+}
+
+.market-form-section-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.market-form-section-heading span {
+  color: var(--orange);
+  font-family: var(--mono-font);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+}
+
+.market-form-section-heading p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.market-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 25px 22px;
+}
+
+.market-form-field {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.market-form-field-wide {
+  grid-column: 1 / -1;
+}
+
+.market-form-field > span {
+  color: var(--ink);
+  font-family: var(--mono-font);
+  font-size: 11px;
+  letter-spacing: 0.07em;
+}
+
+.market-form-field input,
+.market-form-field select,
+.market-form-field textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 52px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  outline: none;
+  background: var(--white);
+  color: var(--ink);
+  font-family: var(--body-font);
+  font-size: 14px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.market-form-field textarea {
+  min-height: 130px;
+  resize: vertical;
+  line-height: 1.7;
+}
+
+.market-form-field input::placeholder,
+.market-form-field textarea::placeholder {
+  color: #a09c94;
+}
+
+.market-form-field input:focus,
+.market-form-field select:focus,
+.market-form-field textarea:focus {
+  border-color: var(--orange);
+  box-shadow: 0 0 0 3px rgba(240, 100, 50, 0.09);
+}
+
+.market-form-field small {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.market-form-footer {
+  padding: 32px 0 55px;
+  border-top: 1px solid var(--line);
+}
+
+.market-publish-button {
+  display: flex;
+  width: 100%;
+  min-height: 58px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 17px 22px;
+  font-family: var(--mono-font);
+  letter-spacing: 0.06em;
+}
+
+.market-publish-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.market-form-footer > p {
+  margin-top: 15px;
+  color: var(--muted);
+  font-size: 12px;
+  text-align: center;
+}
+
+@media (max-width: 700px) {
+  .market-post-hero {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    margin: 25px 0 40px;
+  }
+
+  .market-post-hero .inner-heading {
+    font-size: clamp(42px, 12vw, 62px);
+  }
+
+  .market-form-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .market-form-field-wide {
+    grid-column: auto;
+  }
+
+  .market-form-section {
+    padding: 28px 0;
+  }
+
+  .market-form-section-heading {
+    flex-direction: column;
+    gap: 7px;
+    margin-bottom: 22px;
+  }
+}

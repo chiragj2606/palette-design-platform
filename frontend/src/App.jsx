@@ -3806,120 +3806,219 @@ onClick={() => setProfileMenuOpen(!profileMenuOpen)}      >
   </section>
 )}
 
+
 {page === "Post a Job" && (
-  <section className="inner-page">
+  <section className="inner-page market-post-page">
+
+    {/* PAGE INTRODUCTION */}
     <div className="section-overline">
-      PALETTE MARKET / EMPLOYER
+      PALETTE MARKET / EMPLOYERS
     </div>
 
-    <h1 className="inner-heading">
-      Post a<br /><em>job.</em>
-    </h1>
+    <div className="market-post-hero">
+      <div>
+        <h1 className="inner-heading">
+          Find your next<br />
+          <em>creative mind.</em>
+        </h1>
+      </div>
 
-    <p className="inner-intro">
-      Share an opportunity with the PALETTE design community.
-    </p>
+      <p className="inner-intro">
+        Share an opportunity with the PALETTE design community.
+        Connect with designers who can bring meaningful ideas
+        and thoughtful experiences to life.
+      </p>
+    </div>
 
+    {/* JOB POSTING FORM */}
     <form
-      className="comment-compose-form"
+      className="market-post-form"
       onSubmit={handlePostJob}
     >
-      <label className="comment-label">Job Title</label>
-      <input
-        required
-        value={jobForm.title}
-        onChange={(e) => setJobForm({...jobForm, title: e.target.value})}
-        placeholder="e.g. UI/UX Designer"
-      />
 
-      <label className="comment-label">Company Name</label>
-      <input
-        required
-        value={jobForm.company}
-        onChange={(e) => setJobForm({...jobForm, company: e.target.value})}
-        placeholder="Company name"
-      />
+      {/* SECTION 01 — OPPORTUNITY */}
+      <div className="market-form-section">
+        <div className="market-form-section-heading">
+          <span>01 / THE OPPORTUNITY</span>
+          <p>Start with the essentials.</p>
+        </div>
 
-      <label className="comment-label">Job Location</label>
-      <input
-        required
-        value={jobForm.location}
-        onChange={(e) => setJobForm({...jobForm, location: e.target.value})}
-        placeholder="e.g. Bengaluru or Remote"
-      />
+        <div className="market-form-grid">
 
-      <label className="comment-label">Employment Type</label>
-      <select
-        value={jobForm.employmentType}
-        onChange={(e) => setJobForm({...jobForm, employmentType: e.target.value})}
-      >
-        {["Full-time", "Part-time", "Internship", "Freelance", "Contract"].map((item) => (
-          <option key={item} value={item}>{item}</option>
-        ))}
-      </select>
+          <label className="market-form-field market-form-field-wide">
+            <span>JOB TITLE *</span>
+            <input
+              required
+              value={jobForm.title}
+              onChange={(e) =>
+                setJobForm({...jobForm, title: e.target.value})
+              }
+              placeholder="e.g. Product Designer"
+            />
+          </label>
 
-      <label className="comment-label">Experience Level</label>
-      <select
-        value={jobForm.experienceLevel}
-        onChange={(e) => setJobForm({...jobForm, experienceLevel: e.target.value})}
-      >
-        {["Entry-level", "Junior", "Mid-level", "Senior", "Lead"].map((item) => (
-          <option key={item} value={item}>{item}</option>
-        ))}
-      </select>
+          <label className="market-form-field">
+            <span>COMPANY NAME *</span>
+            <input
+              required
+              value={jobForm.company}
+              onChange={(e) =>
+                setJobForm({...jobForm, company: e.target.value})
+              }
+              placeholder="Your company name"
+            />
+          </label>
 
-      <label className="comment-label">Work Mode</label>
-      <select
-        value={jobForm.workMode}
-        onChange={(e) => setJobForm({...jobForm, workMode: e.target.value})}
-      >
-        {["On-site", "Remote", "Hybrid"].map((item) => (
-          <option key={item} value={item}>{item}</option>
-        ))}
-      </select>
+          <label className="market-form-field">
+            <span>JOB LOCATION *</span>
+            <input
+              required
+              value={jobForm.location}
+              onChange={(e) =>
+                setJobForm({...jobForm, location: e.target.value})
+              }
+              placeholder="e.g. Bengaluru or Remote"
+            />
+          </label>
 
-      <label className="comment-label">Salary</label>
-      <input
-        value={jobForm.salary}
-        onChange={(e) => setJobForm({...jobForm, salary: e.target.value})}
-        placeholder="e.g. ₹3–5 LPA"
-      />
+        </div>
+      </div>
 
-      <label className="comment-label">Job Description</label>
-      <textarea
-        required
-        rows={5}
-        value={jobForm.description}
-        onChange={(e) => setJobForm({...jobForm, description: e.target.value})}
-        placeholder="Describe the opportunity..."
-      />
+      {/* SECTION 02 — WORK ARRANGEMENT */}
+      <div className="market-form-section">
+        <div className="market-form-section-heading">
+          <span>02 / WORK ARRANGEMENT</span>
+          <p>Tell designers how the role works.</p>
+        </div>
 
-      <label className="comment-label">Requirements</label>
-      <textarea
-        rows={4}
-        value={jobForm.requirements}
-        onChange={(e) => setJobForm({...jobForm, requirements: e.target.value})}
-        placeholder={"Enter each requirement on a new line"}
-      />
+        <div className="market-form-grid">
 
-      <label className="comment-label">Required Skills</label>
-      <input
-        value={jobForm.skills}
-        onChange={(e) => setJobForm({...jobForm, skills: e.target.value})}
-        placeholder="Figma, UI Design, UX Research"
-      />
+          <label className="market-form-field">
+            <span>EMPLOYMENT TYPE</span>
+            <select
+              value={jobForm.employmentType}
+              onChange={(e) =>
+                setJobForm({...jobForm, employmentType: e.target.value})
+              }
+            >
+              {["Full-time", "Part-time", "Internship", "Freelance", "Contract"].map((item) => (
+                <option key={item} value={item}>{item}</option>
+              ))}
+            </select>
+          </label>
 
-      {jobPostMessage && (
-        <p role="status">{jobPostMessage}</p>
-      )}
+          <label className="market-form-field">
+            <span>EXPERIENCE LEVEL</span>
+            <select
+              value={jobForm.experienceLevel}
+              onChange={(e) =>
+                setJobForm({...jobForm, experienceLevel: e.target.value})
+              }
+            >
+              {["Entry-level", "Junior", "Mid-level", "Senior", "Lead"].map((item) => (
+                <option key={item} value={item}>{item}</option>
+              ))}
+            </select>
+          </label>
 
-      <button
-        type="submit"
-        className="button-dark"
-        disabled={jobPostLoading}
-      >
-        {jobPostLoading ? "POSTING..." : "PUBLISH JOB ↗"}
-      </button>
+          <label className="market-form-field">
+            <span>WORK MODE</span>
+            <select
+              value={jobForm.workMode}
+              onChange={(e) =>
+                setJobForm({...jobForm, workMode: e.target.value})
+              }
+            >
+              {["On-site", "Remote", "Hybrid"].map((item) => (
+                <option key={item} value={item}>{item}</option>
+              ))}
+            </select>
+          </label>
+
+          <label className="market-form-field">
+            <span>SALARY / COMPENSATION</span>
+            <input
+              value={jobForm.salary}
+              onChange={(e) =>
+                setJobForm({...jobForm, salary: e.target.value})
+              }
+              placeholder="e.g. ₹6–10 LPA"
+            />
+          </label>
+
+        </div>
+      </div>
+
+      {/* SECTION 03 — ROLE DETAILS */}
+      <div className="market-form-section">
+        <div className="market-form-section-heading">
+          <span>03 / ABOUT THE ROLE</span>
+          <p>Give potential applicants a better understanding of the opportunity.</p>
+        </div>
+
+        <div className="market-form-grid">
+
+          <label className="market-form-field market-form-field-wide">
+            <span>JOB DESCRIPTION *</span>
+            <textarea
+              required
+              rows={6}
+              value={jobForm.description}
+              onChange={(e) =>
+                setJobForm({...jobForm, description: e.target.value})
+              }
+              placeholder="Describe the role, responsibilities and the kind of designer you're looking for..."
+            />
+          </label>
+
+          <label className="market-form-field market-form-field-wide">
+            <span>REQUIREMENTS</span>
+            <textarea
+              rows={5}
+              value={jobForm.requirements}
+              onChange={(e) =>
+                setJobForm({...jobForm, requirements: e.target.value})
+              }
+              placeholder="Enter each requirement on a new line..."
+            />
+          </label>
+
+          <label className="market-form-field market-form-field-wide">
+            <span>REQUIRED SKILLS</span>
+            <input
+              value={jobForm.skills}
+              onChange={(e) =>
+                setJobForm({...jobForm, skills: e.target.value})
+              }
+              placeholder="e.g. Figma, UI Design, UX Research, Prototyping"
+            />
+            <small>Separate skills with commas.</small>
+          </label>
+
+        </div>
+      </div>
+
+      {/* SUBMISSION */}
+      <div className="market-form-footer">
+
+        {jobPostMessage && (
+          <p role="status">{jobPostMessage}</p>
+        )}
+
+        <button
+          type="submit"
+          className="button-dark market-publish-button"
+          disabled={jobPostLoading}
+        >
+          {jobPostLoading ? "PUBLISHING OPPORTUNITY..." : "PUBLISH JOB ↗"}
+        </button>
+
+        <p>
+          Your opportunity will be shared with the PALETTE design community.
+        </p>
+
+      </div>
+
     </form>
   </section>
 )}
