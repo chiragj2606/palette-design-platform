@@ -6,6 +6,8 @@ import {
   useState,
 } from "react";
 import "./App.css";
+import AdminDashboard from "./AdminDashboard";
+import PaletteLearn from "./components/PaletteLearn";
 
 const API =
   import.meta.env.VITE_API_URL || "http://localhost:5000/api";
@@ -13,9 +15,6 @@ const API =
 const NAV_ITEMS = [
   "Discover",
   "Explore",
-  "Following",
-  "Boards",
-  "Liked",
   "Learn",
   "Market",
 ];
@@ -248,6 +247,174 @@ practice: {
       },
     ],
   },
+
+
+  {
+    id: "design-elements",
+    title: "Design Elements",
+    description: "Understand the building blocks of every visual design.",
+    lessons: [
+      {
+        id: "elements-introduction",
+        title: "Introduction to Design Elements",
+        duration: "4 min",
+        xp: 10,
+        explanation:
+          "Design elements are the basic visual building blocks used to create interfaces. They include line, shape, form, colour, texture, space and typography. Designers combine these elements to communicate ideas and organise information.",
+        question:
+          "Which of these is considered a fundamental design element?",
+        options: [
+          "User authentication",
+          "Shape",
+          "Database management",
+          "Server hosting",
+        ],
+        answer: 1,
+        feedback:
+          "Correct! Shape is a fundamental visual element used to create icons, buttons, illustrations and layouts.",
+        challenge:
+          "Open an app you use regularly. Identify three different design elements you can see on its screen.",
+      },
+      {
+        id: "line-shape-form",
+        title: "Line, Shape and Form",
+        duration: "5 min",
+        xp: 10,
+        explanation:
+          "Lines guide attention and separate content. Shapes create icons, buttons and visual containers. Form gives objects a sense of depth and dimension. These elements help designers communicate structure and meaning.",
+        question:
+          "Which design element is commonly used to create the outline of a button?",
+        options: [
+          "Shape",
+          "Sound",
+          "Database",
+          "Animation timing",
+        ],
+        answer: 0,
+        feedback:
+          "Exactly! Buttons commonly use rectangular, rounded or other shapes to create recognisable interactive areas.",
+        challenge:
+          "Sketch three button shapes: rectangular, rounded and circular. Consider which one suits each action.",
+      },
+      {
+        id: "space-and-balance",
+        title: "Space and Balance",
+        duration: "5 min",
+        xp: 10,
+        explanation:
+          "Space is the area around and between design elements. White space helps prevent clutter and improves readability. Balance describes how visual elements are distributed to create a stable composition.",
+        question:
+          "Why is sufficient spacing important in a mobile interface?",
+        options: [
+          "It makes every screen more crowded",
+          "It removes the need for headings",
+          "It improves readability and separates content",
+          "It makes all buttons identical",
+        ],
+        answer: 2,
+        feedback:
+          "Correct! Appropriate spacing makes interfaces easier to scan and helps users distinguish between different sections.",
+        challenge:
+          "Find a crowded mobile screen and suggest two spacing changes that would make it easier to use.",
+      },
+    ],
+  },
+
+
+  
+{
+  id: "colour-theory",
+  title: "Colour Theory",
+  description: "Learn how colours work together and influence interface design.",
+  lessons: [
+    {
+      id: "colour-wheel",
+      title: "Understanding the Colour Wheel",
+      duration: "5 min",
+      xp: 10,
+      explanation:
+        "The colour wheel shows the relationships between colours. It helps designers understand primary, secondary and tertiary colours and choose combinations for digital interfaces.",
+      question:
+        "Which set contains the traditional primary colours in the RYB colour model?",
+      options: [
+        "Red, yellow and blue",
+        "Green, orange and purple",
+        "Black, white and grey",
+        "Pink, brown and cyan",
+      ],
+      answer: 0,
+      feedback:
+        "Correct! Red, yellow and blue are the traditional primary colours in the RYB model.",
+      challenge:
+        "Find an app and identify three colours used in its interface. Consider how they work together."
+    },
+    {
+      id: "colour-harmony",
+      title: "Colour Harmony",
+      duration: "5 min",
+      xp: 10,
+      explanation:
+        "Colour harmony is the use of colours that work well together. Complementary colours sit opposite each other on the colour wheel, while analogous colours sit next to each other.",
+      question:
+        "Where are complementary colours located on the colour wheel?",
+      options: [
+        "Directly next to each other",
+        "Opposite each other",
+        "Only in the neutral colour range",
+        "At the centre of the wheel",
+      ],
+      answer: 1,
+      feedback:
+        "Exactly! Complementary colours are opposite each other on the colour wheel and create strong visual contrast.",
+      challenge:
+        "Create a small interface colour palette using a complementary colour pair."
+    },
+    {
+      id: "colour-psychology",
+      title: "Colour Meaning and Emotion",
+      duration: "5 min",
+      xp: 10,
+      explanation:
+        "Colours can influence the mood and tone of an interface. Designers may use warm or cool colours to support a brand's personality, but colour meanings can vary across cultures and contexts.",
+      question:
+        "What should a designer consider when choosing colours for a brand?",
+      options: [
+        "Only personal colour preferences",
+        "Using as many colours as possible",
+        "Brand identity, audience and context",
+        "Making every button a different colour",
+      ],
+      answer: 2,
+      feedback:
+        "Well done! Colour choices should support the brand, audience and purpose of the experience.",
+      challenge:
+        "Choose a brand and identify how its colour palette supports its personality."
+    },
+    {
+      id: "colour-accessibility",
+      title: "Contrast and Accessible Colours",
+      duration: "5 min",
+      xp: 10,
+      explanation:
+        "Accessible colour choices help people read and understand interfaces. Text needs sufficient contrast against its background. Important information should not be communicated through colour alone.",
+      question:
+        "What is a good way to communicate an error message accessibly?",
+      options: [
+        "Use only a red background",
+        "Remove the error explanation",
+        "Use colour alongside text or an icon",
+        "Make the message very faint",
+      ],
+      answer: 2,
+      feedback:
+        "Correct! Combining colour with text or an icon helps people understand the error without relying on colour alone.",
+      challenge:
+        "Design an error message using an icon, clear text and a contrasting colour."
+    }
+  ]
+},
+
+
   {
     id: "ui-ux",
     title: "UI/UX essentials",
@@ -348,6 +515,36 @@ practice: {
   },
 ];
 
+// Keep Learn progress in a predictable shape, even when older or incomplete
+// data exists in localStorage or a state update.
+function normalizeDesignProgress(value) {
+  const source =
+    value && typeof value === "object" && !Array.isArray(value)
+      ? value
+      : {};
+
+  const toNonNegativeNumber = (input) => {
+    const number = Number(input);
+    return Number.isFinite(number) && number >= 0 ? number : 0;
+  };
+
+  return {
+    ...source,
+    completedLessonIds: Array.isArray(source.completedLessonIds)
+      ? source.completedLessonIds.filter((id) => typeof id === "string")
+      : [],
+    mistakes: Array.isArray(source.mistakes)
+      ? source.mistakes.filter(
+          (mistake) => mistake && typeof mistake === "object"
+        )
+      : [],
+    xp: toNonNegativeNumber(source.xp),
+    streak: toNonNegativeNumber(source.streak),
+    lastStudyDate:
+      typeof source.lastStudyDate === "string" ? source.lastStudyDate : "",
+  };
+}
+
 const MARKET_NOTES = [
   {
     number: "01",
@@ -389,6 +586,131 @@ const MARKET_NOTES = [
       "Good design connects visual choices to real user needs.",
   },
 ];
+
+const MARKET_RESOURCES = [
+  {
+    id: "figma-community",
+    title: "Figma Community",
+    category: "Design Templates",
+    description:
+      "Discover UI kits, wireframes, design systems, plugins and community-created resources.",
+    url: "https://www.figma.com/community",
+    type: "DESIGN TOOL",
+  },
+  {
+    id: "google-fonts",
+    title: "Google Fonts",
+    category: "Typography",
+    description:
+      "Explore typefaces and font families for digital interfaces and branding.",
+    url: "https://fonts.google.com/",
+    type: "TYPOGRAPHY",
+  },
+  {
+    id: "material-design",
+    title: "Material Design 3",
+    category: "Design Systems",
+    description:
+      "Learn about interface components, design foundations, accessibility and interaction patterns.",
+    url: "https://m3.material.io/",
+    type: "DESIGN SYSTEM",
+  },
+  {
+    id: "wcag",
+    title: "WCAG Accessibility Guidelines",
+    category: "Accessibility",
+    description:
+      "Understand accessibility requirements for readable, inclusive digital experiences.",
+    url: "https://www.w3.org/WAI/WCAG22/quickref/",
+    type: "GUIDELINES",
+  },
+  {
+    id: "lucide",
+    title: "Lucide Icons",
+    category: "Icons",
+    description:
+      "Explore a consistent open-source icon library for modern interface design.",
+    url: "https://lucide.dev/",
+    type: "ICON LIBRARY",
+  },
+];
+
+
+const MARKET_CASE_STUDIES = [
+  {
+    id: "mobile-checkout",
+    title: "Simplifying a mobile checkout",
+    category: "UX DESIGN",
+    level: "Beginner",
+    overview:
+      "An educational redesign scenario focused on improving the experience of purchasing products through a mobile interface.",
+    problem:
+      "Users struggle to complete checkout because the process contains too many steps and competing actions.",
+    researchQuestions: [
+      "Where do users struggle during checkout?",
+      "Which form fields are genuinely necessary?",
+      "What information do users need before confirming payment?"
+    ],
+    approach:
+      "Simplify the checkout flow, group related information, reduce unnecessary fields and make the primary action visually clear.",
+    designDecisions: [
+      "Group delivery and contact information logically.",
+      "Make the order summary easy to review.",
+      "Give the final checkout action clear visual emphasis."
+    ],
+    takeaway:
+      "A focused checkout experience can reduce friction and make important actions easier to understand."
+  },
+  {
+    id: "accessible-dashboard",
+    title: "Making a dashboard more accessible",
+    category: "ACCESSIBILITY",
+    level: "Intermediate",
+    overview:
+      "An educational scenario exploring how accessibility improvements can make information easier to understand in a digital dashboard.",
+    problem:
+      "A dashboard relies heavily on colour to communicate important information, making some statuses difficult to distinguish.",
+    researchQuestions: [
+      "Can users understand status information without recognising its colour?",
+      "Is the text readable against its background?",
+      "Are icons and labels used consistently?"
+    ],
+    approach:
+      "Introduce descriptive labels, meaningful icons, improved contrast and consistent visual hierarchy.",
+    designDecisions: [
+      "Combine colour with descriptive status labels.",
+      "Use recognisable icons alongside important information.",
+      "Improve text and background contrast."
+    ],
+    takeaway:
+      "Accessible interfaces communicate meaning through more than colour alone."
+  },
+  {
+    id: "navigation-redesign",
+    title: "Redesigning a confusing navigation system",
+    category: "INFORMATION ARCHITECTURE",
+    level: "Beginner",
+    overview:
+      "An educational redesign scenario focused on helping users find important features in a mobile application.",
+    problem:
+      "A mobile application has too many navigation options, making it difficult for users to find important features.",
+    researchQuestions: [
+      "Which destinations do users visit most frequently?",
+      "Which navigation items belong together?",
+      "What tasks should be easiest to access?"
+    ],
+    approach:
+      "Group related destinations, prioritise common tasks and establish a clear navigation hierarchy.",
+    designDecisions: [
+      "Group related destinations into meaningful categories.",
+      "Prioritise frequently used destinations.",
+      "Keep the navigation structure consistent."
+    ],
+    takeaway:
+      "Good information architecture helps people find what they need without unnecessary effort."
+  }
+];
+
 
 function NetworkArtwork() {
   const canvasRef = useRef(null);
@@ -532,6 +854,7 @@ function NetworkArtwork() {
 
 function App() {
   const [page, setPage] = useState("Discover");
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [designs, setDesigns] = useState([]);
   const [exploreDesigns, setExploreDesigns] = useState([]);
 const [explorePage, setExplorePage] = useState(1);
@@ -579,7 +902,9 @@ const [completedStudioChallenges, setCompletedStudioChallenges] = useState(() =>
     const saved = JSON.parse(
       localStorage.getItem("palette_studio_completed") || "[]"
     );
-    return Array.isArray(saved) ? saved : [];
+    return Array.isArray(saved)
+      ? saved.filter((id) => typeof id === "string")
+      : [];
   } catch {
     return [];
   }
@@ -590,6 +915,10 @@ useEffect(() => {
     JSON.stringify(completedStudioChallenges)
   );
 }, [completedStudioChallenges]);
+
+const safeCompletedStudioChallenges = Array.isArray(completedStudioChallenges)
+  ? completedStudioChallenges.filter((id) => typeof id === "string")
+  : [];
 
 const DESIGN_STUDIO_CHALLENGES = [
   {
@@ -671,53 +1000,322 @@ const [quizSubmitted, setQuizSubmitted] = useState(false);
 const [selectedPracticeOption, setSelectedPracticeOption] = useState(null);
 
 const [designProgress, setDesignProgress] = useState(() => {
-  const defaultProgress = {
-  completedLessonIds: [],
-  mistakes: [],
-  xp: 0,
-  streak: 0,
-  lastStudyDate: "",
-};
-
   try {
     const saved = localStorage.getItem("palette_design_progress");
-
-    if (!saved) return defaultProgress;
-
-    const parsed = JSON.parse(saved);
-
-    if (!parsed || !Array.isArray(parsed.completedLessonIds)) {
-      return defaultProgress;
-    }
-
-    return {
-  completedLessonIds: parsed.completedLessonIds,
-  mistakes: Array.isArray(parsed.mistakes)
-    ? parsed.mistakes
-    : [],
-  xp: Number(parsed.xp) || 0,
-  streak: Number(parsed.streak) || 0,
-  lastStudyDate:
-    typeof parsed.lastStudyDate === "string"
-      ? parsed.lastStudyDate
-      : "",
-};
+    return saved
+      ? normalizeDesignProgress(JSON.parse(saved))
+      : normalizeDesignProgress({});
   } catch {
-    return defaultProgress;
+    return normalizeDesignProgress({});
   }
 });
+
+// A render-safe version is used below so an incomplete update cannot crash Learn.
+const safeDesignProgress = normalizeDesignProgress(designProgress);
 
 useEffect(() => {
   try {
     localStorage.setItem(
       "palette_design_progress",
-      JSON.stringify(designProgress)
+      JSON.stringify(normalizeDesignProgress(designProgress))
     );
   } catch {
     // Learning still works if browser storage is unavailable.
   }
 }, [designProgress]);
   const [selectedMarketNote, setSelectedMarketNote] = useState(null);
+  const [selectedMarketCaseStudy, setSelectedMarketCaseStudy] = useState(null);
+  const marketCaseStudyDetailRef = useRef(null);
+  useEffect(() => {
+  if (!selectedMarketCaseStudy) return;
+
+  marketCaseStudyDetailRef.current?.scrollIntoView({
+    behavior: "smooth",
+    block: "start",
+  });
+}, [selectedMarketCaseStudy]);
+  const [marketSearch, setMarketSearch] = useState("");
+const [marketCategory, setMarketCategory] = useState("All");
+const [marketResourceCategory, setMarketResourceCategory] = useState("All");
+const [marketWorkMode, setMarketWorkMode] = useState("All");
+const [marketExperience, setMarketExperience] = useState("All");
+const [marketLocation, setMarketLocation] = useState("");
+const [marketJobs, setMarketJobs] = useState([]);
+const [jobForm, setJobForm] = useState({
+  title: "",
+  company: "",
+  location: "",
+  employmentType: "Full-time",
+  experienceLevel: "Entry-level",
+  description: "",
+  requirements: "",
+  skills: "",
+  salary: "",
+  workMode: "On-site",
+});
+
+const [jobPostMessage, setJobPostMessage] = useState("");
+const [jobPostLoading, setJobPostLoading] = useState(false);
+const [marketJobsLoading, setMarketJobsLoading] = useState(false);
+const [marketJobsError, setMarketJobsError] = useState("");
+const [selectedMarketJob, setSelectedMarketJob] = useState(null);
+const [showApplicationForm, setShowApplicationForm] = useState(false);
+const [coverLetter, setCoverLetter] = useState("");
+const [portfolioLink, setPortfolioLink] = useState("");
+const [applicationMessage, setApplicationMessage] = useState("");
+const [applicationLoading, setApplicationLoading] = useState(false);
+const [myApplications, setMyApplications] = useState([]);
+const [myPostedJobs, setMyPostedJobs] = useState([]);
+const [myPostedJobsLoading, setMyPostedJobsLoading] = useState(false);
+const [myPostedJobsError, setMyPostedJobsError] = useState("");
+const [applicationsLoading, setApplicationsLoading] = useState(false);
+const [applicationsError, setApplicationsError] = useState("");
+
+const normalizedMarketSearch = marketSearch.trim().toLowerCase();
+
+const filteredMarketJobs = marketJobs.filter((job) => {
+  const matchesCategory =
+    marketCategory === "All" ||
+    (marketCategory === "Jobs" && job.employmentType !== "Internship") ||
+    (marketCategory === "Internships" && job.employmentType === "Internship");
+    const matchesWorkMode =
+  marketWorkMode === "All" || job.workMode === marketWorkMode;
+
+const matchesExperience =
+  marketExperience === "All" ||
+  job.experienceLevel === marketExperience;
+
+const matchesLocation =
+  !marketLocation.trim() ||
+  job.location?.toLowerCase().includes(marketLocation.trim().toLowerCase());
+
+  const searchableText = [
+    job.title,
+    job.company,
+    job.location,
+    job.employmentType,
+    job.experienceLevel,
+    job.workMode,
+    ...(job.skills || []),
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+
+  return (
+    matchesCategory &&
+    matchesWorkMode &&
+  matchesExperience &&
+  matchesLocation &&
+    (!normalizedMarketSearch || searchableText.includes(normalizedMarketSearch))
+  );
+});
+
+const filteredMarketNotes = MARKET_NOTES.filter((note) => {
+  const matchesCategory =
+    marketCategory === "All" ||
+    (marketCategory === "Trends" && note.label === "DESIGN TRENDS");
+
+  const searchableText = [
+    note.title,
+    note.description,
+    note.content,
+    note.label,
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+
+  return (
+  matchesCategory &&
+  matchesResourceCategory &&
+  (!normalizedMarketSearch ||
+    searchableText.includes(normalizedMarketSearch))
+);
+});
+
+const filteredMarketResources = MARKET_RESOURCES.filter((resource) => {
+  const matchesCategory =
+    marketCategory === "All" || marketCategory === "Resources";
+    const matchesResourceCategory =
+  marketResourceCategory === "All" ||
+  resource.category === marketResourceCategory;
+
+  const searchableText = [
+    resource.title,
+    resource.category,
+    resource.description,
+    resource.type,
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+
+  return (
+    matchesCategory &&
+    (!normalizedMarketSearch ||
+      searchableText.includes(normalizedMarketSearch))
+  );
+});
+
+const filteredMarketCaseStudies = MARKET_CASE_STUDIES.filter((study) => {
+  const matchesCategory =
+    marketCategory === "All" || marketCategory === "Case Studies";
+
+  const searchableText = [
+    study.title,
+    study.category,
+    study.level,
+    study.problem,
+    study.approach,
+    study.takeaway,
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+
+  return (
+    matchesCategory &&
+    (!normalizedMarketSearch ||
+      searchableText.includes(normalizedMarketSearch))
+  );
+});
+
+const handleApplyForJob = async (event) => {
+  event.preventDefault();
+
+  if (!token) {
+    setApplicationMessage("Please log in before applying.");
+    return;
+  }
+
+  if (!selectedMarketJob) {
+    setApplicationMessage("Please select a job first.");
+    return;
+  }
+
+  setApplicationLoading(true);
+  setApplicationMessage("");
+
+  try {
+    const response = await fetch(
+      `${API}/applications/${selectedMarketJob._id}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          coverLetter,
+          portfolioLink,
+        }),
+      }
+    );
+
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      throw new Error(result.message || "Application failed.");
+    }
+
+    setApplicationMessage("Application submitted successfully!");
+    setCoverLetter("");
+    setPortfolioLink("");
+  } catch (error) {
+    setApplicationMessage(error.message);
+  } finally {
+    setApplicationLoading(false);
+  }
+};
+
+const handlePostJob = async (event) => {
+  event.preventDefault();
+
+  if (!token) {
+    setJobPostMessage("Please log in before posting a job.");
+    return;
+  }
+
+  setJobPostLoading(true);
+  setJobPostMessage("");
+
+  try {
+    const response = await fetch(`${API}/jobs`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        ...jobForm,
+        requirements: jobForm.requirements
+          .split("\n")
+          .map((item) => item.trim())
+          .filter(Boolean),
+        skills: jobForm.skills
+          .split(",")
+          .map((item) => item.trim())
+          .filter(Boolean),
+      }),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      throw new Error(result.message || "Failed to post job.");
+    }
+
+    setJobPostMessage("Job posted successfully!");
+
+    setMarketJobs((previousJobs) => [
+      result.job,
+      ...previousJobs,
+    ]);
+
+    setJobForm({
+      title: "",
+      company: "",
+      location: "",
+      employmentType: "Full-time",
+      experienceLevel: "Entry-level",
+      description: "",
+      requirements: "",
+      skills: "",
+      salary: "",
+      workMode: "On-site",
+    });
+  } catch (error) {
+    setJobPostMessage(error.message);
+  } finally {
+    setJobPostLoading(false);
+  }
+};
+
+useEffect(() => {
+  const fetchMarketJobs = async () => {
+    setMarketJobsLoading(true);
+    setMarketJobsError("");
+
+    try {
+      const response = await fetch(`${API}/jobs`);
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || "Failed to load jobs.");
+      }
+
+      setMarketJobs(result.jobs || []);
+    } catch (error) {
+      setMarketJobsError(error.message);
+    } finally {
+      setMarketJobsLoading(false);
+    }
+  };
+
+  fetchMarketJobs();
+}, []);
+
 
   // Public creator profile state
 const [publicCreator, setPublicCreator] = useState(null);
@@ -730,6 +1328,80 @@ const [followBusy, setFollowBusy] = useState(false);
 const [followError, setFollowError] = useState("");
 
   const [token, setToken] = useState(() => localStorage.getItem("palette_token") || "");
+  useEffect(() => {
+  if (page !== "My Applications") return;
+
+  const fetchMyApplications = async () => {
+    if (!token) {
+      setApplicationsError("Please log in to view your applications.");
+      setMyApplications([]);
+      return;
+    }
+
+    setApplicationsLoading(true);
+    setApplicationsError("");
+
+    try {
+      const response = await fetch(`${API}/applications/my`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || "Failed to load applications.");
+      }
+
+      setMyApplications(result.applications || []);
+    } catch (error) {
+      setApplicationsError(error.message);
+    } finally {
+      setApplicationsLoading(false);
+    }
+  };
+
+  fetchMyApplications();
+}, [page, token]);
+
+useEffect(() => {
+  if (page !== "My Posted Jobs") return;
+
+  const fetchMyPostedJobs = async () => {
+    if (!token) {
+      setMyPostedJobsError("Please log in to view your posted jobs.");
+      setMyPostedJobs([]);
+      return;
+    }
+
+    setMyPostedJobsLoading(true);
+    setMyPostedJobsError("");
+
+    try {
+      const response = await fetch(`${API}/jobs/my`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || "Failed to load posted jobs.");
+      }
+
+      setMyPostedJobs(result.jobs || []);
+    } catch (error) {
+      setMyPostedJobsError(error.message);
+    } finally {
+      setMyPostedJobsLoading(false);
+    }
+  };
+
+  fetchMyPostedJobs();
+}, [page, token]);
+
   const [user, setUser] = useState(null);
   const [authOpen, setAuthOpen] = useState(false);
   const [authMode, setAuthMode] = useState("login");
@@ -2065,30 +2737,26 @@ async function handleLike(design) {
         </a>
 
         <nav className="main-nav" aria-label="Main navigation">
-          {NAV_ITEMS.map((item) => (
-            <button
-              type="button"
-              key={item}
-              className={page === item ? "nav-item active" : "nav-item"}
-              onClick={() => {
-  setPage(item);
+  {NAV_ITEMS.map((item) => (
+    <button
+      type="button"
+      key={item}
+      className={page === item ? "nav-item active" : "nav-item"}
+      onClick={() => {
+        setPage(item);
 
-  if (item === "Following") {
-    loadFollowingDesigns();
-  }
+        if (item === "Explore") {
+          loadExplorePage(1, false);
+        }
 
-  if (item === "Explore") {
-    loadExplorePage(1, false);
-  }
-
-  window.scrollTo({ top: 0, behavior: "smooth" });
-}}
-            >
-              {item}
-            </button>
-          ))}
-        </nav>
-
+        setProfileMenuOpen(false);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }}
+    >
+      {item}
+    </button>
+  ))}
+</nav>
         
 <div className="header-actions">
   {user ? (
@@ -2107,8 +2775,7 @@ async function handleLike(design) {
       <button
         type="button"
         className="profile-button"
-        onClick={() => setPage("Profile")}
-      >
+onClick={() => setProfileMenuOpen(!profileMenuOpen)}      >
         {user.profileImage ? (
   <img
     src={user.profileImage}
@@ -2122,6 +2789,38 @@ async function handleLike(design) {
 <span>{user.username || user.name || "Profile"}</span>
       </button>
 
+{profileMenuOpen && (
+  <div className="profile-dropdown">
+    {[
+      "Profile",
+      "Following",
+      "Boards",
+      "Liked",
+      "My Applications",
+      "My Posted Jobs",
+      ...(user?.role === "admin" ? ["Admin"] : []),
+    ].map((item) => (
+      <button
+        type="button"
+        key={item}
+        className="profile-dropdown-item"
+        onClick={() => {
+          setPage(item);
+
+          if (item === "Following") {
+            loadFollowingDesigns();
+          }
+
+          setProfileMenuOpen(false);
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }}
+      >
+        {item}
+      </button>
+    ))}
+  </div>
+)}
+
       <button
         type="button"
         className="join-button"
@@ -2132,6 +2831,9 @@ async function handleLike(design) {
     </>
   ) : (
     <>
+
+
+    
       <button
         type="button"
         className="profile-button"
@@ -2597,848 +3299,649 @@ async function handleLike(design) {
 )}
 
         {page === "Learn" && (
-  <section className="inner-page learn-page">
-    <div className="section-overline">PALETTE ACADEMY / DESIGN PATH</div>
+          <PaletteLearn
+            apiBase={API}
+            token={token}
+            user={user}
+            legacyProgress={safeDesignProgress}
+          />
+        )}
 
-    
-
-    <div className="learn-hero">
-      <div>
-        <p className="learn-kicker">LEVEL UP YOUR DESIGN EYE</p>
-        <h1 className="inner-heading">
-          Learn design,
-          <br />
-          <em>one small win at a time.</em>
-        </h1>
-        <p className="inner-intro">
-          Short lessons, quick quizzes, and practical challenges to help
-          you become a more thoughtful designer.
-        </p>
-      </div>
-
-      <div className="learn-stats">
-        <div className="learn-stat">
-          <strong>{designProgress.xp}</strong>
-          <span>XP earned</span>
-        </div>
-        <div className="learn-stat">
-          <strong>{designProgress.completedLessonIds.length}</strong>
-          <span>Lessons completed</span>
-        </div>
-        <div className="learn-stat">
-          <strong>{designProgress.streak}</strong>
-          <span>Day streak</span>
-        </div>
-      </div>
+{page === "Market" && (
+  <section className="inner-page">
+    <div className="section-overline">
+      THE WIDER PICTURE / MARKET NOTES
     </div>
 
-{!selectedDesignLesson && (
-  <section className="learn-revision-panel">
-    <div className="learn-revision-heading">
-      <div>
-        <p className="learn-kicker">YOUR PERSONAL REVIEW</p>
-        <h2>Smart revision</h2>
-        <p>Learn from your mistakes and strengthen your design knowledge.</p>
-      </div>
+    <h1 className="inner-heading">
+  Design<br /><em>Market.</em>
+</h1>
 
-      <span className="learn-revision-count">
-        {designProgress.mistakes.length}
-      </span>
-    </div>
-
-    {designProgress.mistakes.length === 0 ? (
-      <div className="learn-revision-empty">
-        <span className="learn-revision-icon">✦</span>
-        <div>
-          <strong>You're ready to learn.</strong>
-          <p>
-            When you get a quiz question wrong, it will appear here
-            so you can revisit it later.
-          </p>
-        </div>
-      </div>
-    ) : (
-      <div className="learn-revision-list">
-        {designProgress.mistakes.map((mistake) => (
-          <article
-            className="learn-revision-card"
-            key={mistake.lessonId}
-          >
-            <div className="learn-revision-card-top">
-              <span className="learn-revision-tag">
-                NEEDS REVIEW
-              </span>
-
-              <span className="learn-revision-attempts">
-                {mistake.attempts}{" "}
-                {mistake.attempts === 1 ? "attempt" : "attempts"}
-              </span>
-            </div>
-
-            <h3>{mistake.lessonTitle}</h3>
-            <p className="learn-revision-question">
-              {mistake.question}
-            </p>
-
-            <div className="learn-revision-answer">
-              <span>Your previous answer</span>
-              <p>{mistake.chosenAnswer}</p>
-            </div>
-
-            <div className="learn-revision-answer is-correct">
-              <span>Correct answer</span>
-              <p>{mistake.correctAnswer}</p>
-            </div>
-
-            <button
-              type="button"
-              className="learn-primary"
-              onClick={() => {
-                const lesson = DESIGN_UNITS
-                  .flatMap((unit) =>
-                    unit.lessons.map((item) => ({
-                      ...item,
-                      unitTitle: unit.title,
-                    }))
-                  )
-                  .find((item) => item.id === mistake.lessonId);
-
-                if (!lesson) return;
-
-                setSelectedDesignLesson(lesson);
-                setSelectedQuizAnswer(null);
-                setQuizSubmitted(false);
-                setSelectedPracticeOption(null);
-              }}
-            >
-              REVIEW LESSON ↗
-            </button>
-          </article>
-        ))}
-      </div>
-    )}
-  </section>
-)}
-
-
-{!selectedDesignLesson && (
-  <section className="learn-content">
-    <div className="section-overline">HANDS-ON DESIGN</div>
-    <h2>Design Practice Studio</h2>
-    <p className="learn-explanation">
-      Practice real UI/UX decisions through small design challenges.
-      Choose a challenge, think through the problem, and check your answer.
-    </p>
-
-<p className="learn-kicker">
-  STUDIO PROGRESS: {completedStudioChallenges.length} /{" "}
-  {DESIGN_STUDIO_CHALLENGES.length} CHALLENGES COMPLETED
+    <p className="inner-intro">
+  Explore design industry resources, trends, jobs, and opportunities.
 </p>
 
-{studioAchievementNotice && (
-  <div
-    className="studio-achievement-notice"
-    role="status"
-  >
-    {studioAchievementNotice}
-  </div>
-)}
+    {/* MARKET SEARCH AND CATEGORIES */}
+    <div className="market-controls">
+      <input
+        type="search"
+        className="market-search"
+        placeholder="Search roles, articles, skills, or design resources..."
+        value={marketSearch}
+        onChange={(event) => setMarketSearch(event.target.value)}
+        aria-label="Search Market"
+      />
 
-<section className="studio-achievements">
-  <p className="learn-kicker">🏆 YOUR ACHIEVEMENTS</p>
-
-  <div className="learn-answers">
-    {DESIGN_STUDIO_ACHIEVEMENTS.map((achievement) => {
-      const unlocked =
-        completedStudioChallenges.length >=
-        achievement.requiredCompletions;
-
-      const remaining =
-        achievement.requiredCompletions -
-        completedStudioChallenges.length;
-
-      return (
-        <article className="learn-lesson" key={achievement.id}>
-          <div className="section-overline">
-            {unlocked
-              ? "✓ UNLOCKED"
-              : `🔒 ${remaining} MORE CHALLENGE${remaining === 1 ? "" : "S"}`}
-          </div>
-
-          <h3>
-            {achievement.icon} {achievement.title}
-          </h3>
-
-          <p className="learn-explanation">
-            {achievement.description}
-          </p>
-        </article>
-      );
-    })}
-  </div>
-</section>
-
-    {selectedStudioChallenge ? (
-      <article className="learn-lesson">
-        <button
-          type="button"
-          className="button-outline learn-back"
-          onClick={() => {
-            setSelectedStudioChallenge(null);
-            setSelectedStudioChoice(null);
-            setStudioSubmitted(false);
-          }}
-        >
-          ← ALL CHALLENGES
-        </button>
-
-        <div className="section-overline">
-          {selectedStudioChallenge.level} / DESIGN CHALLENGE
-        </div>
-
-        <h3>{selectedStudioChallenge.title}</h3>
-
-        <p className="learn-explanation">
-          {selectedStudioChallenge.brief}
-        </p>
-
-        <div className="learn-quiz">
-          <p className="learn-kicker">YOUR DESIGN DECISION</p>
-          <h3>{selectedStudioChallenge.question}</h3>
-
-          <div className="learn-answers">
-            {selectedStudioChallenge.options.map((option, index) => (
-              <button
-                type="button"
-                key={option}
-                className={`learn-answer ${
-                  selectedStudioChoice === index ? "is-selected" : ""
-                } ${
-                  studioSubmitted &&
-                  index === selectedStudioChallenge.answer
-                    ? "is-correct"
-                    : ""
-                } ${
-                  studioSubmitted &&
-                  selectedStudioChoice === index &&
-                  selectedStudioChoice !== selectedStudioChallenge.answer
-                    ? "is-wrong"
-                    : ""
-                }`}
-                onClick={() => {
-                  setSelectedStudioChoice(index);
-                  setStudioSubmitted(false);
-                }}
-              >
-                <span className="learn-answer-letter">
-                  {String.fromCharCode(65 + index)}
-                </span>
-                <span>{option}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {studioSubmitted && (
-          <p className="learn-explanation">
-            {selectedStudioChoice === selectedStudioChallenge.answer
-              ? selectedStudioChallenge.feedback
-              : `Not quite! The best answer is: ${
-                  selectedStudioChallenge.options[
-                    selectedStudioChallenge.answer
-                  ]
-                }`}
-          </p>
-        )}
-
-        {!studioSubmitted && (
-          <button
-            type="button"
-            className="learn-primary"
-            disabled={selectedStudioChoice === null}
-            onClick={() => {
-  if (selectedStudioChoice === null) return;
-
-  setStudioSubmitted(true);
-
-  if (selectedStudioChoice === selectedStudioChallenge.answer) {
-  if (!completedStudioChallenges.includes(selectedStudioChallenge.id)) {
-    setDesignProgress((current) => ({
-      ...current,
-      xp: (current.xp || 0) + 10,
-    }));
-  }
-
-  if (selectedStudioChoice === selectedStudioChallenge.answer) {
-  const isNewCompletion = !completedStudioChallenges.includes(
-    selectedStudioChallenge.id
-  );
-
-  if (isNewCompletion) {
-    setDesignProgress((current) => ({
-      ...current,
-      xp: (current.xp || 0) + 10,
-    }));
-
-    const newCompletionCount = completedStudioChallenges.length + 1;
-
-    const newlyUnlockedAchievement = DESIGN_STUDIO_ACHIEVEMENTS.find(
-      (achievement) =>
-        achievement.requiredCompletions === newCompletionCount
-    );
-
-    if (newlyUnlockedAchievement) {
-      setStudioAchievementNotice(
-        `🏆 Achievement unlocked: ${newlyUnlockedAchievement.title}!`
-      );
-    }
-  }
-
-  setCompletedStudioChallenges((current) =>
-    current.includes(selectedStudioChallenge.id)
-      ? current
-      : [...current, selectedStudioChallenge.id]
-  );
-}
-}
-}}
-          >
-            CHECK MY DESIGN DECISION
-          </button>
-        )}
-      </article>
-    ) : (
-      <div className="learn-answers">
-        {DESIGN_STUDIO_CHALLENGES.map((challenge) => (
-          <article className="learn-lesson" key={challenge.id}>
-            <div className="section-overline">
-              {challenge.level} / HANDS-ON
-{completedStudioChallenges.includes(challenge.id) && (
-  <span className="studio-completed-badge">✓ COMPLETED</span>
-)}
-            </div>
-
-            <h3>{challenge.title}</h3>
-
-            <p className="learn-explanation">
-              {challenge.brief}
-            </p>
-
+      <div className="market-category-filters">
+        {["All", "Jobs", "Internships", "Trends", "Resources", "Case Studies"].map(
+          (category) => (
             <button
+              key={category}
               type="button"
-              className="learn-primary"
-              onClick={() => {
-                setSelectedStudioChallenge(challenge);
-                setSelectedStudioChoice(null);
-                setStudioSubmitted(false);
-                setStudioAchievementNotice("");
-              }}
+              className={
+                marketCategory === category
+                  ? "button-dark"
+                  : "button-outline"
+              }
+              onClick={() => setMarketCategory(category)}
             >
-              START CHALLENGE ↗
+              {category}
             </button>
-          </article>
+          )
+        )}
+      </div>
+      {(marketCategory === "All" ||
+  marketCategory === "Jobs" ||
+  marketCategory === "Internships") && (
+  <div className="market-job-filters">
+    <label>
+      Location
+      <input
+        type="text"
+        placeholder="e.g. Bengaluru, Remote"
+        value={marketLocation}
+        onChange={(event) => setMarketLocation(event.target.value)}
+      />
+    </label>
+
+    <label>
+      Work mode
+      <select
+        value={marketWorkMode}
+        onChange={(event) => setMarketWorkMode(event.target.value)}
+      >
+        {["All", "On-site", "Remote", "Hybrid"].map((mode) => (
+          <option key={mode} value={mode}>{mode}</option>
         ))}
-      </div>
-    )}
-  </section>
-)}
+      </select>
+    </label>
 
-
-    {selectedDesignLesson ? (
-      
-      <div className="learn-content">
-        <button
-          type="button"
-          className="button-outline learn-back"
-          onClick={() => {
-            setSelectedDesignLesson(null);
-            setSelectedQuizAnswer(null);
-            setQuizSubmitted(false);
-          }}
-        >
-          ← BACK TO LEARNING PATH
-        </button>
-
-        <article className="learn-lesson">
-          <div className="section-overline">
-            {selectedDesignLesson.unitTitle} /{" "}
-            {selectedDesignLesson.duration}
-          </div>
-
-          <h2>{selectedDesignLesson.title}</h2>
-          <p className="learn-explanation">
-            {selectedDesignLesson.explanation}
-          </p>
-
-          <div className="learn-quiz">
-            <p className="learn-kicker">QUICK CHECK</p>
-            <h3>{selectedDesignLesson.question}</h3>
-
-            <div className="learn-answers">
-              {selectedDesignLesson.options.map((option, answerIndex) => (
-                <button
-                  type="button"
-                  key={option}
-                  className={`learn-answer ${
-                    selectedQuizAnswer === answerIndex ? "is-selected" : ""
-                  } ${
-                    quizSubmitted &&
-                    answerIndex === selectedDesignLesson.answer
-                      ? "is-correct"
-                      : ""
-                  } ${
-                    quizSubmitted &&
-                    selectedQuizAnswer === answerIndex &&
-                    selectedQuizAnswer !== selectedDesignLesson.answer
-                      ? "is-wrong"
-                      : ""
-                  }`}
-                  onClick={() => {
-                    setSelectedQuizAnswer(answerIndex);
-                    setQuizSubmitted(false);
-                  }}
-                >
-                  <span className="learn-answer-letter">
-                    {String.fromCharCode(65 + answerIndex)}
-                  </span>
-                  <span>{option}</span>
-                </button>
-              ))}
-            </div>
-
-            {!quizSubmitted && (
-              <button
-                type="button"
-                className="learn-primary"
-                disabled={selectedQuizAnswer === null}
-                onClick={() => {
-  if (selectedQuizAnswer === null) return;
-
-  setQuizSubmitted(true);
-
-  if (selectedQuizAnswer === selectedDesignLesson.answer) {
-  setDesignProgress((current) => ({
-    ...current,
-    mistakes: current.mistakes.filter(
-      (mistake) => mistake.lessonId !== selectedDesignLesson.id
-    ),
-  }));
-  return;
-}
-
-  if (selectedQuizAnswer !== selectedDesignLesson.answer) {
-    const lesson = selectedDesignLesson;
-    const now = new Date().toISOString();
-
-    setDesignProgress((current) => {
-      const mistakes = Array.isArray(current.mistakes)
-        ? current.mistakes
-        : [];
-
-      const existingMistake = mistakes.find(
-        (mistake) => mistake.lessonId === lesson.id
-      );
-
-      if (existingMistake) {
-        return {
-          ...current,
-          mistakes: mistakes.map((mistake) =>
-            mistake.lessonId === lesson.id
-              ? {
-                  ...mistake,
-                  attempts: (Number(mistake.attempts) || 1) + 1,
-                  chosenAnswer:
-                    lesson.options[selectedQuizAnswer],
-                  correctAnswer: lesson.options[lesson.answer],
-                  lastAttemptAt: now,
-                }
-              : mistake
-          ),
-        };
-      }
-
-      return {
-        ...current,
-        mistakes: [
-          ...mistakes,
-          {
-            lessonId: lesson.id,
-            lessonTitle: lesson.title,
-            question: lesson.question,
-            chosenAnswer: lesson.options[selectedQuizAnswer],
-            correctAnswer: lesson.options[lesson.answer],
-            attempts: 1,
-            lastAttemptAt: now,
-          },
-        ],
-      };
-    });
-  }
-}}
-              >
-                CHECK ANSWER
-              </button>
-            )}
-
-            {quizSubmitted && (
-              <div
-                className={`learn-feedback ${
-                  selectedQuizAnswer === selectedDesignLesson.answer
-                    ? "is-correct"
-                    : "is-wrong"
-                }`}
-              >
-                <strong>
-                  {selectedQuizAnswer === selectedDesignLesson.answer
-                    ? "Correct! Great work."
-                    : "Not quite. Try again!"}
-                </strong>
-
-                <p>
-                  {selectedQuizAnswer === selectedDesignLesson.answer
-                    ? selectedDesignLesson.feedback
-                    : "Review the lesson and choose another answer."}
-                </p>
-              </div>
-            )}
-          </div>
-
-{selectedDesignLesson.practice && (
-  <section className="learn-practice">
-    <p className="learn-kicker">PRACTICE ROUND · DESIGN EYE</p>
-
-    <h3>{selectedDesignLesson.practice.title}</h3>
-
-    <p className="learn-practice-prompt">
-      {selectedDesignLesson.practice.prompt}
-    </p>
-
-    <div className="learn-practice-grid">
-  {selectedDesignLesson.practice.options.map((option) => (
-    <button
-      type="button"
-      key={option.id}
-      className={`learn-practice-option ${option.style || ""} ${
-        selectedPracticeOption === option.id ? "is-selected" : ""
-      }`}
-      aria-pressed={selectedPracticeOption === option.id}
-      onClick={() => setSelectedPracticeOption(option.id)}
-    >
-      {selectedDesignLesson.practice.type === "spot-issue" ? (
-        <div className="learn-issue-choice">
-          <span className="learn-issue-letter">
-            {option.label}
-          </span>
-
-          <span className="learn-issue-text">
-            {option.text}
-          </span>
-        </div>
-      ) : (
-        <>
-          <div className={`learn-mockup ${option.style}`}>
-            <div className="learn-mockup-topbar">
-              <span />
-              <span />
-              <span />
-              <small>PALETTE STUDIO</small>
-            </div>
-
-            <div className="learn-mockup-content">
-              <span className="learn-mockup-eyebrow">
-                YOUR CREATIVE SPACE
-              </span>
-
-              <strong>{option.headline}</strong>
-
-              <p>{option.description}</p>
-
-              <span className="learn-mockup-button">
-                {option.buttonLabel}
-              </span>
-            </div>
-          </div>
-
-          <div className="learn-practice-label">
-            <strong>SCREEN {option.label}</strong>
-
-            <span>
-              {selectedPracticeOption === option.id
-                ? "✓ Selected"
-                : "Choose this design"}
-            </span>
-          </div>
-        </>
-      )}
-    </button>
-  ))}
-</div>
-
-    {selectedPracticeOption && (
-      <div
-        className={`learn-practice-feedback ${
-          selectedDesignLesson.practice.options.find(
-            (option) => option.id === selectedPracticeOption
-          )?.isCorrect
-            ? "is-correct"
-            : "is-wrong"
-        }`}
+    <label>
+      Experience
+      <select
+        value={marketExperience}
+        onChange={(event) => setMarketExperience(event.target.value)}
       >
-        <strong>
-          {selectedDesignLesson.practice.options.find(
-            (option) => option.id === selectedPracticeOption
-          )?.isCorrect
-            ? "Great design thinking! ✨"
-            : "Look a little closer 👀"}
-        </strong>
-
-        <p>
-          {
-            selectedDesignLesson.practice.options.find(
-              (option) => option.id === selectedPracticeOption
-            )?.feedback
-          }
-        </p>
-      </div>
-    )}
-  </section>
-)}
-
-          <div className="learn-challenge">
-            <p className="learn-kicker">YOUR DESIGN CHALLENGE</p>
-            <p>{selectedDesignLesson.challenge}</p>
-            <span>Try it in a real app or design project.</span>
-          </div>
-
-          {quizSubmitted &&
-  selectedQuizAnswer === selectedDesignLesson.answer &&
-  (!selectedDesignLesson.practice ||
-    selectedDesignLesson.practice.options.some(
-      (option) =>
-        option.id === selectedPracticeOption && option.isCorrect
-    )) && (
-              <button
-                type="button"
-                className="learn-primary learn-complete"
-                onClick={() => {
-                  setDesignProgress((current) => {
-                    if (
-                      current.completedLessonIds.includes(
-                        selectedDesignLesson.id
-                      )
-                    ) {
-                      return current;
-                    }
-
-                    const now = new Date();
-
-                    const today = [
-                      now.getFullYear(),
-                      String(now.getMonth() + 1).padStart(2, "0"),
-                      String(now.getDate()).padStart(2, "0"),
-                    ].join("-");
-
-                    const yesterdayDate = new Date(now);
-                    yesterdayDate.setDate(yesterdayDate.getDate() - 1);
-
-                    const yesterday = [
-                      yesterdayDate.getFullYear(),
-                      String(yesterdayDate.getMonth() + 1).padStart(2, "0"),
-                      String(yesterdayDate.getDate()).padStart(2, "0"),
-                    ].join("-");
-
-                    const nextStreak =
-                      current.lastStudyDate === today
-                        ? current.streak
-                        : current.lastStudyDate === yesterday
-                          ? current.streak + 1
-                          : 1;
-
-                    return {
-                      completedLessonIds: [
-                        ...current.completedLessonIds,
-                        selectedDesignLesson.id,
-                      ],
-                      xp: current.xp + selectedDesignLesson.xp,
-                      streak: nextStreak,
-                      lastStudyDate: today,
-                    };
-                  });
-
-                  setSelectedDesignLesson(null);
-                  setSelectedPracticeOption(null);
-                  setSelectedQuizAnswer(null);
-                  setQuizSubmitted(false);
-                  
-                  
-                }}
-              >
-                COMPLETE LESSON · +{selectedDesignLesson.xp} XP
-              </button>
-            )}
-        </article>
-      </div>
-    ) : (
-      <div className="learn-path">
-        {DESIGN_UNITS.map((unit, unitIndex) => {
-          const completedInUnit = unit.lessons.filter((lesson) =>
-            designProgress.completedLessonIds.includes(lesson.id)
-          ).length;
-
-          return (
-            <section className="learn-unit" key={unit.id}>
-              <div className="learn-unit-heading">
-                <div>
-                  <p className="learn-kicker">
-                    UNIT {String(unitIndex + 1).padStart(2, "0")}
-                  </p>
-                  <h2>{unit.title}</h2>
-                  <p>{unit.description}</p>
-                </div>
-
-                <span className="learn-unit-count">
-                  {completedInUnit}/{unit.lessons.length}
-                </span>
-              </div>
-
-              <div className="learn-progress-track">
-                <div
-                  className="learn-progress-fill"
-                  style={{
-                    width: `${
-                      (completedInUnit / unit.lessons.length) * 100
-                    }%`,
-                  }}
-                />
-              </div>
-
-              <div className="learn-path-lessons">
-                {unit.lessons.map((lesson, lessonIndex) => {
-                  const previousUnit =
-                    unitIndex > 0 ? DESIGN_UNITS[unitIndex - 1] : null;
-
-                  const previousLesson =
-                    lessonIndex > 0
-                      ? unit.lessons[lessonIndex - 1]
-                      : previousUnit
-                        ? previousUnit.lessons[
-                            previousUnit.lessons.length - 1
-                          ]
-                        : null;
-
-                  const isUnlocked =
-                    !previousLesson ||
-                    designProgress.completedLessonIds.includes(
-                      previousLesson.id
-                    );
-
-                  const isCompleted =
-                    designProgress.completedLessonIds.includes(lesson.id);
-
-                  return (
-                    <button
-                      type="button"
-                      key={lesson.id}
-                      className={`learn-path-lesson ${
-                        isCompleted ? "is-completed" : ""
-                      } ${!isUnlocked ? "is-locked" : ""}`}
-                      disabled={!isUnlocked}
-                      onClick={() => {
-                        setSelectedDesignLesson({
-                          ...lesson,
-                          unitTitle: unit.title,
-                        });
-                        setSelectedQuizAnswer(null);
-                        setQuizSubmitted(false);
-                        setSelectedPracticeOption(null);
-                      }}
-                    >
-                      <span className="learn-path-icon">
-                        {isCompleted ? "✓" : isUnlocked ? "↗" : "🔒"}
-                      </span>
-
-                      <span className="learn-path-copy">
-                        <strong>{lesson.title}</strong>
-                        <small>
-                          {lesson.duration} · {lesson.xp} XP
-                        </small>
-                      </span>
-
-                      <span className="learn-path-status">
-                        {isCompleted
-                          ? "COMPLETED"
-                          : isUnlocked
-                            ? "START"
-                            : "LOCKED"}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </section>
-          );
-        })}
-      </div>
-    )}
-  </section>
-)}
-        {page === "Market" && (
-          <section className="inner-page">
-            <div className="section-overline">THE WIDER PICTURE / MARKET NOTES</div>
-            <h1 className="inner-heading">Read the<br /><em>signals.</em></h1>
-            <p className="inner-intro">A place for observing design movements, understanding expectations, and asking better questions about the work ahead.</p>
-            <div className="learning-list">
-  {MARKET_NOTES.map((note, index) => (
-    <article
-      className={`learning-card ${
-        index % 2 === 0 ? "learning-dark" : "learning-light"
-      }`}
-      key={note.number}
-    >
-      <div className="learning-label">
-        {note.number} / {note.label}
-      </div>
-
-      <h2>{note.title}</h2>
-      <p>{note.description}</p>
-
-      <button
-        type="button"
-        className="learning-link"
-        onClick={() => setSelectedMarketNote(note)}
-      >
-        EXPLORE NOTE ↗
-      </button>
-    </article>
-  ))}
-</div>
-
-{selectedMarketNote && (
-  <article className="market-note learning-detail">
-    <span className="section-overline">
-      MARKET NOTE / {selectedMarketNote.number}
-    </span>
-
-    <h2>{selectedMarketNote.title}</h2>
-    <p>{selectedMarketNote.content}</p>
-
-    <h3>PUT IT INTO PRACTICE</h3>
-    <p>{selectedMarketNote.exercise}</p>
-
-    <h3>KEY TAKEAWAY</h3>
-    <p>{selectedMarketNote.takeaway}</p>
+        {["All", "Entry-level", "Junior", "Mid-level", "Senior", "Lead"].map((level) => (
+          <option key={level} value={level}>{level}</option>
+        ))}
+      </select>
+    </label>
 
     <button
       type="button"
       className="button-outline"
-      onClick={() => setSelectedMarketNote(null)}
+      onClick={() => {
+        setMarketLocation("");
+        setMarketWorkMode("All");
+        setMarketExperience("All");
+      }}
     >
-      CLOSE NOTE
+      CLEAR FILTERS
+    </button>
+  </div>
+)}
+    </div>
+
+    {/* JOB LISTINGS */}
+    {(marketCategory === "All" ||
+      marketCategory === "Jobs" ||
+      marketCategory === "Internships") && (
+      <div className="market-jobs-section">
+        <div className="section-overline">CAREER OPPORTUNITIES</div>
+
+        <h2>Find your next opportunity.</h2>
+        <p>Explore opportunities from the design industry.</p>
+
+        <button
+          type="button"
+          className="button-dark"
+          onClick={() => setPage("Post a Job")}
+        >
+          POST A JOB ↗
+        </button>
+
+        {marketJobsLoading && (
+          <p>Loading opportunities...</p>
+        )}
+
+        {marketJobsError && (
+          <p className="error-message">{marketJobsError}</p>
+        )}
+
+        {!marketJobsLoading &&
+          !marketJobsError &&
+          filteredMarketJobs.length === 0 && (
+            <p>
+              No matching opportunities found. Try another search or category.
+            </p>
+          )}
+
+        <div className="learning-list">
+          {filteredMarketJobs.map((job) => (
+            <article
+              className="learning-card learning-light"
+              key={job._id}
+              onClick={() => setSelectedMarketJob(job)}
+              style={{ cursor: "pointer" }}
+            >
+              <div className="learning-label">
+                {job.company} / {job.location}
+              </div>
+
+              <h2>{job.title}</h2>
+
+              <p>
+                {job.employmentType} · {job.experienceLevel} · {job.workMode}
+              </p>
+
+              <p>{job.salary}</p>
+              <p>{job.description}</p>
+            </article>
+          ))}
+        </div>
+        
+              </div>
+    )}
+
+    {/* DESIGN RESOURCES */}
+{(marketCategory === "All" || marketCategory === "Resources") && (
+  <div className="market-resources-section">
+    <div className="section-overline">THE DESIGN TOOLKIT</div>
+
+    <h2>Resources worth keeping.</h2>
+
+    <p>
+      A curated collection of tools, references and guidelines
+      for your design practice.
+    </p>
+
+<div className="market-resource-filters">
+  {[
+    "All",
+    "Design Templates",
+    "Typography",
+    "Design Systems",
+    "Accessibility",
+    "Icons",
+  ].map((category) => (
+    <button
+      key={category}
+      type="button"
+      className={
+        marketResourceCategory === category
+          ? "button-dark"
+          : "button-outline"
+      }
+      onClick={() => setMarketResourceCategory(category)}
+    >
+      {category}
+    </button>
+  ))}
+
+  <button
+    type="button"
+    className="button-outline"
+    onClick={() => {
+      setMarketResourceCategory("All");
+      setMarketSearch("");
+    }}
+  >
+    CLEAR FILTERS
+  </button>
+</div>
+
+    {filteredMarketResources.length > 0 ? (
+      <div className="learning-list">
+        {filteredMarketResources.map((resource) => (
+          <article
+            className="learning-card learning-light"
+            key={resource.id}
+          >
+            <div className="learning-label">
+              {resource.type} / {resource.category}
+            </div>
+
+            <h2>{resource.title}</h2>
+
+            <p>{resource.description}</p>
+
+            <a
+              className="learning-link"
+              href={resource.url}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              EXPLORE RESOURCE ↗
+            </a>
+          </article>
+        ))}
+      </div>
+    ) : (
+      <p>No matching resources found. Try another search.</p>
+    )}
+  </div>
+)}
+
+
+{/* CASE STUDIES */}
+{(marketCategory === "All" || marketCategory === "Case Studies") && (
+  <div className="market-case-studies">
+    <div className="section-overline">LEARN FROM REAL-WORLD DESIGN PROBLEMS</div>
+
+    <h2>Design thinking in practice.</h2>
+
+    <p>
+      Explore design scenarios, understand the problems and discover
+      how thoughtful design decisions can improve experiences.
+    </p>
+
+    <div className="learning-list">
+      {filteredMarketCaseStudies.map((study) => (
+        <article
+          className="learning-card learning-light"
+          key={study.id}
+        >
+          <div className="learning-label">
+            {study.category} / {study.level}
+          </div>
+
+          <h2>{study.title}</h2>
+
+          <h3>THE PROBLEM</h3>
+          <p>{study.problem}</p>
+
+          <h3>THE DESIGN APPROACH</h3>
+          <p>{study.approach}</p>
+
+          <h3>KEY TAKEAWAY</h3>
+          <p>{study.takeaway}</p>
+          <button
+  type="button"
+  className="button-dark"
+  onClick={() => setSelectedMarketCaseStudy(study)}
+>
+  READ CASE STUDY ↗
+</button>
+        </article>
+
+      ))}
+    </div>
+
+    {filteredMarketCaseStudies.length === 0 && (
+      <p>No matching case studies found. Try another search.</p>
+    )}
+    {selectedMarketCaseStudy && (
+  <article 
+  ref={marketCaseStudyDetailRef}
+  className="market-note learning-detail market-case-study-detail">
+    <span className="section-overline">
+      CASE STUDY / {selectedMarketCaseStudy.category}
+    </span>
+
+    <h2>{selectedMarketCaseStudy.title}</h2>
+    <p>{selectedMarketCaseStudy.overview}</p>
+
+    <h3>THE DESIGN PROBLEM</h3>
+    <p>{selectedMarketCaseStudy.problem}</p>
+
+    <h3>RESEARCH QUESTIONS</h3>
+    <ul>
+      {selectedMarketCaseStudy.researchQuestions.map((question, index) => (
+        <li key={index}>{question}</li>
+      ))}
+    </ul>
+
+    <h3>THE DESIGN APPROACH</h3>
+    <p>{selectedMarketCaseStudy.approach}</p>
+
+    <h3>KEY DESIGN DECISIONS</h3>
+    <ul>
+      {selectedMarketCaseStudy.designDecisions.map((decision, index) => (
+        <li key={index}>{decision}</li>
+      ))}
+    </ul>
+
+    <h3>KEY TAKEAWAY</h3>
+    <p>{selectedMarketCaseStudy.takeaway}</p>
+
+    <button
+      type="button"
+      className="button-outline"
+      onClick={() => setSelectedMarketCaseStudy(null)}
+    >
+      CLOSE CASE STUDY
     </button>
   </article>
 )}
-          </section>
+  </div>
+)}
+
+
+    {/* MARKET NOTES AND TRENDS */}
+    {(marketCategory === "All" || marketCategory === "Trends") && (
+      <>
+        <div className="learning-list">
+          {filteredMarketNotes.map((note, index) => (
+            <article
+              className={`learning-card ${
+                index % 2 === 0 ? "learning-dark" : "learning-light"
+              }`}
+              key={note.number}
+            >
+              <div className="learning-label">
+                {note.number} / {note.label}
+              </div>
+
+              <h2>{note.title}</h2>
+              <p>{note.description}</p>
+
+              <button
+                type="button"
+                className="learning-link"
+                onClick={() => setSelectedMarketNote(note)}
+              >
+                EXPLORE NOTE ↗
+              </button>
+            </article>
+          ))}
+        </div>
+
+        {selectedMarketNote && (
+          <article className="market-note learning-detail">
+            <span className="section-overline">
+              MARKET NOTE / {selectedMarketNote.number}
+            </span>
+
+            <h2>{selectedMarketNote.title}</h2>
+            <p>{selectedMarketNote.content}</p>
+
+            <h3>PUT IT INTO PRACTICE</h3>
+            <p>{selectedMarketNote.exercise}</p>
+
+            <h3>KEY TAKEAWAY</h3>
+            <p>{selectedMarketNote.takeaway}</p>
+
+            <button
+              type="button"
+              className="button-outline"
+              onClick={() => setSelectedMarketNote(null)}
+            >
+              CLOSE NOTE
+            </button>
+          </article>
         )}
+      </>
+    )}
+  </section>
+)}
+
+
+{page === "My Applications" && (
+  <section className="inner-page">
+    <div className="section-overline">
+      PALETTE MARKET / CAREER TRACKER
+    </div>
+
+    <h1 className="inner-heading">
+      My<br /><em>applications.</em>
+    </h1>
+
+    <p className="inner-intro">
+      Keep track of your opportunities and follow your application progress.
+    </p>
+
+    {applicationsLoading && (
+      <p>Loading your applications...</p>
+    )}
+
+    {applicationsError && (
+      <p className="error-message">{applicationsError}</p>
+    )}
+
+    {!applicationsLoading &&
+      !applicationsError &&
+      myApplications.length === 0 && (
+        <p>You haven't applied for any jobs yet.</p>
+      )}
+
+    {!applicationsLoading && myApplications.length > 0 && (
+      <div className="learning-list">
+        {myApplications.map((application) => (
+          <article
+            className="learning-card learning-light"
+            key={application._id}
+          >
+            <div className="learning-label">
+              {application.job?.company || "Company"} /{" "}
+              {application.job?.location || "Location"}
+              
+            </div>
+
+            <h2>
+              {application.job?.title || "Job no longer available"}
+            </h2>
+
+            <p>
+              {application.job?.employmentType || "Not specified"} ·{" "}
+              {application.job?.workMode || "Not specified"}
+            </p>
+
+            <p>
+              Status: <strong>{application.status}</strong>
+            </p>
+
+            <p>
+              Applied on:{" "}
+              {new Date(application.createdAt).toLocaleDateString()}
+            </p>
+          </article>
+        ))}
+      </div>
+    )}
+
+    <p>
+      Showing {myApplications.length} applications
+    </p>
+  </section>
+)}
+
+{page === "Post a Job" && (
+  <section className="inner-page">
+    <div className="section-overline">
+      PALETTE MARKET / EMPLOYER
+    </div>
+
+    <h1 className="inner-heading">
+      Post a<br /><em>job.</em>
+    </h1>
+
+    <p className="inner-intro">
+      Share an opportunity with the PALETTE design community.
+    </p>
+
+    <form
+      className="comment-compose-form"
+      onSubmit={handlePostJob}
+    >
+      <label className="comment-label">Job Title</label>
+      <input
+        required
+        value={jobForm.title}
+        onChange={(e) => setJobForm({...jobForm, title: e.target.value})}
+        placeholder="e.g. UI/UX Designer"
+      />
+
+      <label className="comment-label">Company Name</label>
+      <input
+        required
+        value={jobForm.company}
+        onChange={(e) => setJobForm({...jobForm, company: e.target.value})}
+        placeholder="Company name"
+      />
+
+      <label className="comment-label">Job Location</label>
+      <input
+        required
+        value={jobForm.location}
+        onChange={(e) => setJobForm({...jobForm, location: e.target.value})}
+        placeholder="e.g. Bengaluru or Remote"
+      />
+
+      <label className="comment-label">Employment Type</label>
+      <select
+        value={jobForm.employmentType}
+        onChange={(e) => setJobForm({...jobForm, employmentType: e.target.value})}
+      >
+        {["Full-time", "Part-time", "Internship", "Freelance", "Contract"].map((item) => (
+          <option key={item} value={item}>{item}</option>
+        ))}
+      </select>
+
+      <label className="comment-label">Experience Level</label>
+      <select
+        value={jobForm.experienceLevel}
+        onChange={(e) => setJobForm({...jobForm, experienceLevel: e.target.value})}
+      >
+        {["Entry-level", "Junior", "Mid-level", "Senior", "Lead"].map((item) => (
+          <option key={item} value={item}>{item}</option>
+        ))}
+      </select>
+
+      <label className="comment-label">Work Mode</label>
+      <select
+        value={jobForm.workMode}
+        onChange={(e) => setJobForm({...jobForm, workMode: e.target.value})}
+      >
+        {["On-site", "Remote", "Hybrid"].map((item) => (
+          <option key={item} value={item}>{item}</option>
+        ))}
+      </select>
+
+      <label className="comment-label">Salary</label>
+      <input
+        value={jobForm.salary}
+        onChange={(e) => setJobForm({...jobForm, salary: e.target.value})}
+        placeholder="e.g. ₹3–5 LPA"
+      />
+
+      <label className="comment-label">Job Description</label>
+      <textarea
+        required
+        rows={5}
+        value={jobForm.description}
+        onChange={(e) => setJobForm({...jobForm, description: e.target.value})}
+        placeholder="Describe the opportunity..."
+      />
+
+      <label className="comment-label">Requirements</label>
+      <textarea
+        rows={4}
+        value={jobForm.requirements}
+        onChange={(e) => setJobForm({...jobForm, requirements: e.target.value})}
+        placeholder={"Enter each requirement on a new line"}
+      />
+
+      <label className="comment-label">Required Skills</label>
+      <input
+        value={jobForm.skills}
+        onChange={(e) => setJobForm({...jobForm, skills: e.target.value})}
+        placeholder="Figma, UI Design, UX Research"
+      />
+
+      {jobPostMessage && (
+        <p role="status">{jobPostMessage}</p>
+      )}
+
+      <button
+        type="submit"
+        className="button-dark"
+        disabled={jobPostLoading}
+      >
+        {jobPostLoading ? "POSTING..." : "PUBLISH JOB ↗"}
+      </button>
+    </form>
+  </section>
+)}
+
+{page === "My Posted Jobs" && (
+  <section className="inner-page">
+    <div className="section-overline">
+      PALETTE MARKET / EMPLOYER DASHBOARD
+    </div>
+
+    <h1 className="inner-heading">
+      My posted<br /><em>jobs.</em>
+    </h1>
+
+    <p className="inner-intro">
+      Manage the opportunities you've shared with the PALETTE community.
+    </p>
+
+    {myPostedJobsLoading && (
+      <p>Loading your posted jobs...</p>
+    )}
+
+    {myPostedJobsError && (
+      <p className="error-message">{myPostedJobsError}</p>
+    )}
+
+    {!myPostedJobsLoading &&
+      !myPostedJobsError &&
+      myPostedJobs.length === 0 && (
+        <p>You haven't posted any jobs yet.</p>
+      )}
+
+    {!myPostedJobsLoading && myPostedJobs.length > 0 && (
+      <div className="learning-list">
+        {myPostedJobs.map((job) => (
+          <article
+            className="learning-card learning-light"
+            key={job._id}
+          >
+            <div className="learning-label">
+              {job.company} / {job.location}
+            </div>
+
+            <h2>{job.title}</h2>
+
+            <p>
+              {job.employmentType} · {job.experienceLevel} · {job.workMode}
+            </p>
+
+            <p>{job.salary}</p>
+
+            <p>
+              Status: <strong>{job.status}</strong>
+            </p>
+          </article>
+        ))}
+      </div>
+    )}
+
+    <p>Showing {myPostedJobs.length} posted jobs</p>
+  </section>
+)}
 
         {page === "Profile" && (
           <section className="inner-page">
@@ -3512,6 +4015,9 @@ async function handleLike(design) {
           </section>
         )}
 
+                {page === "Admin" && user?.role === "admin" && (
+          <AdminDashboard token={token} />
+        )}
         <footer className="palette-footer">
           <span>PALETTE / DESIGN PRACTICE, IN MOTION</span>
           <span>LOOK CLOSELY. MAKE DELIBERATELY.</span>
@@ -3925,6 +4431,157 @@ async function handleLike(design) {
           </section>
         </div>
       )}
+
+      
+{selectedMarketJob && (
+  <div
+    className="auth-backdrop"
+    onMouseDown={(event) => {
+      if (event.target === event.currentTarget) {
+        setSelectedMarketJob(null);
+      }
+    }}
+  >
+    <section
+      className="design-detail-panel"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="job-detail-title"
+    >
+      <button
+        type="button"
+        className="auth-close"
+        onClick={() => setSelectedMarketJob(null)}
+        aria-label="Close job details"
+      >
+        ×
+      </button>
+
+      <div className="section-overline">
+        PALETTE MARKET / JOB DETAILS
+      </div>
+
+      <h2 id="job-detail-title">{selectedMarketJob.title}</h2>
+
+      <p className="detail-category">
+        {selectedMarketJob.company} · {selectedMarketJob.location}
+      </p>
+
+      <p>
+        {selectedMarketJob.employmentType} ·{" "}
+        {selectedMarketJob.experienceLevel} ·{" "}
+        {selectedMarketJob.workMode}
+      </p>
+
+      <h3>Salary</h3>
+      <p>{selectedMarketJob.salary || "Not specified"}</p>
+
+      <h3>About the opportunity</h3>
+      <p>{selectedMarketJob.description}</p>
+
+      <h3>Requirements</h3>
+      {selectedMarketJob.requirements?.length > 0 ? (
+        <ul>
+          {selectedMarketJob.requirements.map((item, index) => (
+            <li key={index}>{item}</li>
+          ))}
+        </ul>
+      ) : (
+        <p>No specific requirements listed.</p>
+      )}
+
+      <h3>Skills</h3>
+      <div className="work-tags">
+        {selectedMarketJob.skills?.length > 0 ? (
+          selectedMarketJob.skills.map((skill) => (
+            <span key={skill}>{skill}</span>
+          ))
+        ) : (
+          <span>Not specified</span>
+        )}
+      </div>
+
+      
+{showApplicationForm && (
+  <form
+    className="comment-compose-form"
+    onSubmit={handleApplyForJob}
+  >
+    <h3>Apply for this position</h3>
+
+    <label className="comment-label" htmlFor="application-cover-letter">
+      Cover Letter
+    </label>
+
+    <textarea
+      id="application-cover-letter"
+      value={coverLetter}
+      onChange={(event) => setCoverLetter(event.target.value)}
+      rows={5}
+      maxLength={3000}
+      placeholder="Tell the employer why you're a good fit..."
+    />
+
+    <label className="comment-label" htmlFor="application-portfolio">
+      Portfolio Link
+    </label>
+
+    <input
+      id="application-portfolio"
+      type="url"
+      value={portfolioLink}
+      onChange={(event) => setPortfolioLink(event.target.value)}
+      placeholder="https://your-portfolio.com"
+    />
+
+    {applicationMessage && (
+      <p role="status">{applicationMessage}</p>
+    )}
+
+    <div className="comment-actions">
+      <button
+        type="submit"
+        className="button-dark"
+        disabled={applicationLoading}
+      >
+        {applicationLoading ? "SUBMITTING..." : "SUBMIT APPLICATION ↗"}
+      </button>
+
+      <button
+        type="button"
+        className="button-outline"
+        onClick={() => setShowApplicationForm(false)}
+        disabled={applicationLoading}
+      >
+        CANCEL
+      </button>
+    </div>
+  </form>
+)}
+
+
+      <div className="detail-actions">
+        <button
+  type="button"
+  className="button-dark"
+  onClick={() => {
+    setShowApplicationForm(true);
+    setApplicationMessage("");
+  }}
+>
+  APPLY NOW ↗
+</button>
+        <button
+          type="button"
+          className="button-outline"
+          onClick={() => setSelectedMarketJob(null)}
+        >
+          CLOSE
+        </button>
+      </div>
+    </section>
+  </div>
+)}
 
       {selectedDesign && (
         <div className="auth-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) setSelectedDesign(null); }}>

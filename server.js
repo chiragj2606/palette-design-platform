@@ -10,6 +10,10 @@ const designRoutes = require("./src/routes/designRoutes");
 const likeRoutes = require("./src/routes/likeRoutes");
 const commentRoutes = require("./src/routes/commentRoutes");
 const saveRoutes = require("./src/routes/saveRoutes");
+const adminRoutes = require("./src/routes/adminRoutes");
+const jobRoutes = require("./src/routes/jobRoutes");
+const applicationRoutes = require("./src/routes/applicationRoutes");
+const learnRoutes = require("./src/routes/learnRoutes");
 
 const app = express();
 
@@ -34,11 +38,16 @@ app.get("/", (req, res) => {
 
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/admin", adminRoutes);
 app.use("/api", protectedRoutes);
 app.use("/api/designs", saveRoutes);
 app.use("/api/designs", likeRoutes);
 app.use("/api/designs", designRoutes);
 app.use("/api/designs", commentRoutes);
+app.use("/api/jobs", jobRoutes);
+app.use("/api/applications", applicationRoutes);
+app.use("/api/learn", learnRoutes);
+
 
 
 app.listen(PORT, () => {
