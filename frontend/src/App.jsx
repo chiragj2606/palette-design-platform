@@ -853,7 +853,88 @@ function NetworkArtwork() {
 }
 
 function App() {
-  const [page, setPage] = useState("Discover");
+  
+const [page, setPageState] = useState("Discover");
+
+// PALETTE navigation history
+const currentPageRef = useRef("Discover");
+const pageHistoryRef = useRef(["Discover"]);
+const pageHistoryIndexRef = useRef(0);
+
+const [canGoBack, setCanGoBack] = useState(false);
+const [canGoForward, setCanGoForward] = useState(false);
+
+// Record every normal page navigation
+const setPage = useCallback((nextPage) => {
+  const resolvedPage =
+    typeof nextPage === "function"
+      ? nextPage(currentPageRef.current)
+      : nextPage;
+
+  if (!resolvedPage || resolvedPage === currentPageRef.current) {
+    return;
+  }
+
+  const nextHistory = pageHistoryRef.current.slice(
+    0,
+    pageHistoryIndexRef.current + 1
+  );
+
+  nextHistory.push(resolvedPage);
+
+  pageHistoryRef.current = nextHistory;
+  pageHistoryIndexRef.current = nextHistory.length - 1;
+  currentPageRef.current = resolvedPage;
+
+  setPageState(resolvedPage);
+  setCanGoBack(true);
+  setCanGoForward(false);
+}, []);
+
+// Navigate backward
+const goBack = useCallback(() => {
+  if (pageHistoryIndexRef.current <= 0) return;
+
+  pageHistoryIndexRef.current -= 1;
+
+  const previousPage =
+    pageHistoryRef.current[pageHistoryIndexRef.current];
+
+  currentPageRef.current = previousPage;
+  setPageState(previousPage);
+
+  setCanGoBack(pageHistoryIndexRef.current > 0);
+  setCanGoForward(true);
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}, []);
+
+// Navigate forward
+const goForward = useCallback(() => {
+  if (
+    pageHistoryIndexRef.current >=
+    pageHistoryRef.current.length - 1
+  ) {
+    return;
+  }
+
+  pageHistoryIndexRef.current += 1;
+
+  const nextPage =
+    pageHistoryRef.current[pageHistoryIndexRef.current];
+
+  currentPageRef.current = nextPage;
+  setPageState(nextPage);
+
+  setCanGoBack(true);
+  setCanGoForward(
+    pageHistoryIndexRef.current <
+      pageHistoryRef.current.length - 1
+  );
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}, []);
+
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [designs, setDesigns] = useState([]);
   const [exploreDesigns, setExploreDesigns] = useState([]);
@@ -1189,6 +1270,7 @@ const filteredMarketCaseStudies = MARKET_CASE_STUDIES.filter((study) => {
   );
 });
 
+
 const handleApplyForJob = async (event) => {
   event.preventDefault();
 
@@ -1200,6 +1282,30 @@ const handleApplyForJob = async (event) => {
   if (!selectedMarketJob) {
     setApplicationMessage("Please select a job first.");
     return;
+  }
+
+  // Cover letter is required.
+  if (!coverLetter.trim()) {
+    setApplicationMessage("Please enter your cover letter before submitting.");
+    return;
+  }
+
+  // Portfolio link is optional, but must be valid when provided.
+  const trimmedPortfolioLink = portfolioLink.trim();
+
+  if (trimmedPortfolioLink) {
+    try {
+      const parsedUrl = new URL(trimmedPortfolioLink);
+
+      if (!["http:", "https:"].includes(parsedUrl.protocol)) {
+        throw new Error("Invalid URL");
+      }
+    } catch {
+      setApplicationMessage(
+        "Please enter a valid portfolio URL starting with https://"
+      );
+      return;
+    }
   }
 
   setApplicationLoading(true);
@@ -1215,8 +1321,8 @@ const handleApplyForJob = async (event) => {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          coverLetter,
-          portfolioLink,
+          coverLetter: coverLetter.trim(),
+          portfolioLink: trimmedPortfolioLink,
         }),
       }
     );
@@ -1231,11 +1337,12 @@ const handleApplyForJob = async (event) => {
     setCoverLetter("");
     setPortfolioLink("");
   } catch (error) {
-    setApplicationMessage(error.message);
+    setApplicationMessage(error.message || "Unable to submit application.");
   } finally {
     setApplicationLoading(false);
   }
 };
+
 
 const handlePostJob = async (event) => {
   event.preventDefault();
@@ -2745,6 +2852,29 @@ async function handleLike(design) {
         </a>
 
         <nav className="main-nav" aria-label="Main navigation">
+          <div className="nav-history-controls">
+  <button
+    type="button"
+    className="nav-history-button"
+    onClick={goBack}
+    disabled={!canGoBack}
+    aria-label="Go back"
+    title="Go back"
+  >
+    ‹
+  </button>
+
+  <button
+    type="button"
+    className="nav-history-button"
+    onClick={goForward}
+    disabled={!canGoForward}
+    aria-label="Go forward"
+    title="Go forward"
+  >
+    ›
+  </button>
+</div>
   {NAV_ITEMS.map((item) => (
     <button
       type="button"
@@ -4581,56 +4711,85 @@ onClick={() => setProfileMenuOpen(!profileMenuOpen)}      >
       }
     }}
   >
-    <section
-      className="design-detail-panel"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="job-detail-title"
-    >
-      <button
-        type="button"
-        className="auth-close"
-        onClick={() => setSelectedMarketJob(null)}
-        aria-label="Close job details"
-      >
-        ×
-      </button>
+    
+<section
+  className="design-detail-panel market-job-detail-panel"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="job-detail-title"
+>
+  <button
+    type="button"
+    className="auth-close"
+    onClick={() => setSelectedMarketJob(null)}
+    aria-label="Close job details"
+  >
+    ×
+  </button>
 
-      <div className="section-overline">
-        PALETTE MARKET / JOB DETAILS
+  {/* JOB HEADER */}
+  <div className="section-overline">
+    PALETTE MARKET / OPPORTUNITIES
+  </div>
+
+  <div className="market-detail-header">
+    <h2 id="job-detail-title">
+      {selectedMarketJob.title}<span>.</span>
+    </h2>
+
+    <p className="market-detail-company">
+      {selectedMarketJob.company} · {selectedMarketJob.location}
+    </p>
+
+    <div className="market-detail-tags">
+      <span>{selectedMarketJob.employmentType}</span>
+      <span>{selectedMarketJob.experienceLevel}</span>
+      <span>{selectedMarketJob.workMode}</span>
+    </div>
+  </div>
+
+  {/* SALARY */}
+  <div className="market-detail-salary">
+    <span>COMPENSATION</span>
+    <strong>{selectedMarketJob.salary || "Not specified"}</strong>
+  </div>
+
+  {/* JOB INFORMATION */}
+  <div className="market-detail-content">
+
+    <div className="market-detail-section">
+      <div className="market-detail-label">
+        01 / ABOUT THE OPPORTUNITY
+      </div>
+      <p className="market-detail-description">
+        {selectedMarketJob.description}
+      </p>
+    </div>
+
+    <div className="market-detail-section">
+      <div className="market-detail-label">
+        02 / REQUIREMENTS
       </div>
 
-      <h2 id="job-detail-title">{selectedMarketJob.title}</h2>
-
-      <p className="detail-category">
-        {selectedMarketJob.company} · {selectedMarketJob.location}
-      </p>
-
-      <p>
-        {selectedMarketJob.employmentType} ·{" "}
-        {selectedMarketJob.experienceLevel} ·{" "}
-        {selectedMarketJob.workMode}
-      </p>
-
-      <h3>Salary</h3>
-      <p>{selectedMarketJob.salary || "Not specified"}</p>
-
-      <h3>About the opportunity</h3>
-      <p>{selectedMarketJob.description}</p>
-
-      <h3>Requirements</h3>
       {selectedMarketJob.requirements?.length > 0 ? (
-        <ul>
+        <ul className="market-detail-requirements">
           {selectedMarketJob.requirements.map((item, index) => (
             <li key={index}>{item}</li>
           ))}
         </ul>
       ) : (
-        <p>No specific requirements listed.</p>
+        <p className="market-detail-muted">
+          No specific requirements listed.
+        </p>
       )}
+    </div>
 
-      <h3>Skills</h3>
-      <div className="work-tags">
+    <div className="market-detail-section">
+      <div className="market-detail-label">
+        03 / REQUIRED SKILLS
+      </div>
+
+      <div className="market-detail-skills">
         {selectedMarketJob.skills?.length > 0 ? (
           selectedMarketJob.skills.map((skill) => (
             <span key={skill}>{skill}</span>
@@ -4639,86 +4798,107 @@ onClick={() => setProfileMenuOpen(!profileMenuOpen)}      >
           <span>Not specified</span>
         )}
       </div>
-
-      
-{showApplicationForm && (
-  <form
-    className="comment-compose-form"
-    onSubmit={handleApplyForJob}
-  >
-    <h3>Apply for this position</h3>
-
-    <label className="comment-label" htmlFor="application-cover-letter">
-      Cover Letter
-    </label>
-
-    <textarea
-      id="application-cover-letter"
-      value={coverLetter}
-      onChange={(event) => setCoverLetter(event.target.value)}
-      rows={5}
-      maxLength={3000}
-      placeholder="Tell the employer why you're a good fit..."
-    />
-
-    <label className="comment-label" htmlFor="application-portfolio">
-      Portfolio Link
-    </label>
-
-    <input
-      id="application-portfolio"
-      type="url"
-      value={portfolioLink}
-      onChange={(event) => setPortfolioLink(event.target.value)}
-      placeholder="https://your-portfolio.com"
-    />
-
-    {applicationMessage && (
-      <p role="status">{applicationMessage}</p>
-    )}
-
-    <div className="comment-actions">
-      <button
-        type="submit"
-        className="button-dark"
-        disabled={applicationLoading}
-      >
-        {applicationLoading ? "SUBMITTING..." : "SUBMIT APPLICATION ↗"}
-      </button>
-
-      <button
-        type="button"
-        className="button-outline"
-        onClick={() => setShowApplicationForm(false)}
-        disabled={applicationLoading}
-      >
-        CANCEL
-      </button>
     </div>
-  </form>
-)}
+  </div>
 
+  {/* APPLICATION FORM */}
+  {showApplicationForm && (
+    <form
+      className="market-application-form"
+      onSubmit={handleApplyForJob}
+    >
+      <div className="market-application-heading">
+        <div className="market-detail-label">
+          04 / YOUR APPLICATION
+        </div>
 
-      <div className="detail-actions">
+        <h3>Make your introduction.</h3>
+
+        <p>
+          Tell the employer what makes you a good fit for this opportunity.
+        </p>
+      </div>
+
+      <label htmlFor="application-cover-letter">
+        COVER LETTER *
+      </label>
+
+      <textarea
+        id="application-cover-letter"
+        value={coverLetter}
+        onChange={(event) => setCoverLetter(event.target.value)}
+        rows={5}
+        maxLength={3000}
+        required
+        placeholder="Tell the employer about your experience, approach and interest in this role..."
+      />
+
+      <label htmlFor="application-portfolio">
+        PORTFOLIO LINK
+      </label>
+
+      <input
+        id="application-portfolio"
+        type="url"
+        value={portfolioLink}
+        onChange={(event) => setPortfolioLink(event.target.value)}
+        placeholder="https://your-portfolio.com"
+      />
+
+      {applicationMessage && (
+        <p role="status" className="market-application-message">
+          {applicationMessage}
+        </p>
+      )}
+
+      <div className="market-application-actions">
         <button
-  type="button"
-  className="button-dark"
-  onClick={() => {
-    setShowApplicationForm(true);
-    setApplicationMessage("");
-  }}
->
-  APPLY NOW ↗
-</button>
+          type="submit"
+          className="button-dark"
+          disabled={applicationLoading}
+        >
+          {applicationLoading
+            ? "SUBMITTING..."
+            : "SUBMIT APPLICATION ↗"}
+        </button>
+
         <button
           type="button"
           className="button-outline"
-          onClick={() => setSelectedMarketJob(null)}
+          onClick={() => setShowApplicationForm(false)}
+          disabled={applicationLoading}
         >
-          CLOSE
+          CANCEL
         </button>
       </div>
-    </section>
+    </form>
+  )}
+
+  {/* BOTTOM ACTIONS */}
+  <div className="market-detail-actions">
+    {!showApplicationForm && (
+      <button
+        type="button"
+        className="button-dark"
+        onClick={() => {
+          setShowApplicationForm(true);
+          setApplicationMessage("");
+        }}
+      >
+        APPLY NOW ↗
+      </button>
+    )}
+
+    <button
+      type="button"
+      className="button-outline"
+      onClick={() => setSelectedMarketJob(null)}
+    >
+      CLOSE
+    </button>
+  </div>
+</section>
+
   </div>
 )}
 
