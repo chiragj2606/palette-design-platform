@@ -1170,10 +1170,14 @@ const filteredMarketCaseStudies = MARKET_CASE_STUDIES.filter((study) => {
     study.title,
     study.category,
     study.level,
+    study.overview,
     study.problem,
+    study.researchQuestions,
     study.approach,
+    study.designDecisions,
     study.takeaway,
   ]
+    .flat()
     .filter(Boolean)
     .join(" ")
     .toLowerCase();
@@ -3580,14 +3584,17 @@ onClick={() => setProfileMenuOpen(!profileMenuOpen)}      >
 {/* CASE STUDIES */}
 {(marketCategory === "All" || marketCategory === "Case Studies") && (
   <div className="market-case-studies">
-    <div className="section-overline">LEARN FROM REAL-WORLD DESIGN PROBLEMS</div>
+    <div className="section-overline">
+  PRACTICE WITH REAL-WORLD-INSPIRED DESIGN PROBLEMS
+</div>
 
     <h2>Design thinking in practice.</h2>
 
     <p>
-      Explore design scenarios, understand the problems and discover
-      how thoughtful design decisions can improve experiences.
-    </p>
+  Explore practical UI/UX scenarios, investigate user problems,
+  evaluate design decisions and learn how thoughtful solutions
+  can improve digital experiences.
+</p>
 
     <div className="learning-list">
       {filteredMarketCaseStudies.map((study) => (
