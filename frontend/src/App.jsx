@@ -3010,14 +3010,72 @@ onClick={() => setProfileMenuOpen(!profileMenuOpen)}      >
                 </div>
               </div>
 
-              <button type="button" className="hero-feature" onClick={showWorkFeed} aria-label="Explore the animated PALETTE network">
-                <NetworkArtwork />
-                <div className="feature-center">
-                  <div className="feature-name">PALETTE</div>
-                  <p>Human-led design intelligence in motion.</p>
-                </div>
-                <span className="feature-link">THE INDEX ↗</span>
-              </button>
+              
+<div
+  className="hero-feature design-motion"
+  role="img"
+  aria-label="Animated creative workspace with typography, colours and UI layouts"
+>
+  <div className="motion-topline">
+    <span>PALETTE / CREATIVE LAB</span>
+    <span className="motion-live">
+      <i /> DESIGN IN MOTION
+    </span>
+  </div>
+
+  <div className="motion-stage">
+
+    <div className="motion-glow" />
+    <div className="motion-orbit" />
+
+    <div className="motion-card motion-type-card">
+      <span>01 / TYPOGRAPHY</span>
+      <strong>Aa</strong>
+      <small>FIND YOUR TYPE.</small>
+    </div>
+
+    <div className="motion-card motion-color-card">
+      <span>02 / COLOUR THEORY</span>
+      <div className="motion-swatches">
+        <i />
+        <i />
+        <i />
+        <i />
+        <i />
+      </div>
+      <small>COLOUR HAS FEELING.</small>
+    </div>
+
+    <div className="motion-card motion-ui-card">
+      <span>03 / INTERFACE DESIGN</span>
+      <div className="motion-ui-preview">
+        <div className="motion-ui-nav" />
+        <div className="motion-ui-heading" />
+        <div className="motion-ui-line" />
+        <div className="motion-ui-line short" />
+        <div className="motion-ui-blocks">
+          <i />
+          <i />
+          <i />
+        </div>
+      </div>
+    </div>
+
+    <div className="motion-shape motion-shape-one" />
+    <div className="motion-shape motion-shape-two" />
+
+    <div className="motion-cursor">
+      ↖ <span>CREATING</span>
+    </div>
+
+  </div>
+
+  <div className="motion-bottomline">
+    <span>THINK / EXPLORE / CREATE</span>
+    <span>✳</span>
+  </div>
+</div>
+
             </section>
 
             <section className="dna-section">
