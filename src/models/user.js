@@ -1,3 +1,4 @@
+
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema(
@@ -18,9 +19,9 @@ const userSchema = new mongoose.Schema(
     email: {
       type: String,
       required: true,
-      unique: true,
       lowercase: true,
       trim: true,
+      unique: true,
     },
 
     role: {
@@ -45,15 +46,91 @@ const userSchema = new mongoose.Schema(
     },
 
     headline: {
-  type: String,
-  trim: true,
-  default: "",
-  maxlength: 120,
-},
+      type: String,
+      trim: true,
+      default: "",
+      maxlength: 120,
+    },
 
     skills: {
       type: [String],
       default: [],
+    },
+
+    // Employer verification information
+    employerVerification: {
+      status: {
+        type: String,
+        enum: [
+          "not_requested",
+          "pending",
+          "approved",
+          "rejected",
+          "revoked",
+        ],
+        default: "not_requested",
+      },
+
+      companyName: {
+        type: String,
+        trim: true,
+        default: "",
+      },
+
+      companyWebsite: {
+        type: String,
+        trim: true,
+        default: "",
+      },
+
+      companyEmail: {
+        type: String,
+        lowercase: true,
+        trim: true,
+        default: "",
+      },
+
+      jobTitle: {
+        type: String,
+        trim: true,
+        default: "",
+      },
+
+      proofUrl: {
+        type: String,
+        trim: true,
+        default: "",
+      },
+
+      notes: {
+        type: String,
+        trim: true,
+        maxlength: 1000,
+        default: "",
+      },
+
+      submittedAt: {
+        type: Date,
+        default: null,
+      },
+
+      reviewedAt: {
+        type: Date,
+        default: null,
+      },
+
+      reviewedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        default: null,
+      },
+
+      reviewNote: {
+        type: String,
+        trim: true,
+        maxlength: 1000,
+        default: "",
+      },
     },
   },
   {

@@ -3,6 +3,7 @@ const express = require("express");
 const router = express.Router();
 
 const protect = require("../middleware/authMiddleware");
+const canPostJobs = require("../middleware/jobPostingMiddleware");
 
 const {
   getJobs,
@@ -17,6 +18,6 @@ router.get("/my", protect, getMyPostedJobs);
 router.get("/:id", getJobById);
 
 // Protected route — login required
-router.post("/", protect, createJob);
+router.post("/", protect, canPostJobs, createJob);
 
 module.exports = router;
