@@ -1,3 +1,4 @@
+
 const express = require("express");
 
 const protect = require("../middleware/authMiddleware");
@@ -12,9 +13,14 @@ const {
   exportCsv,
 } = require("../controllers/adminExportController");
 
+const {
+  getEmployerRequests,
+  reviewEmployerRequest,
+} = require("../controllers/employerAdminController");
+
 const router = express.Router();
 
-// Admin dashboard statistics
+// Dashboard statistics — administrators only
 router.get(
   "/overview",
   protect,
@@ -22,7 +28,7 @@ router.get(
   getDashboardOverview
 );
 
-// Export complete database as Excel
+// Complete database exports — administrators only
 router.get(
   "/export/excel",
   protect,
@@ -30,12 +36,27 @@ router.get(
   exportExcel
 );
 
-// Export complete database as CSV ZIP
 router.get(
   "/export/csv",
   protect,
   requireAdmin,
   exportCsv
+);
+
+// View employer verification requests
+router.get(
+  "/employers",
+  protect,
+  requireAdmin,
+  getEmployerRequests
+);
+
+// Approve, reject, or revoke employer privileges
+router.patch(
+  "/employers/:userId/review",
+  protect,
+  requireAdmin,
+  reviewEmployerRequest
 );
 
 module.exports = router;

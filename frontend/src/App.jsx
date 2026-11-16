@@ -142,7 +142,7 @@ practice: {
     description: "Make interfaces readable and intentional.",
     lessons: [
       {
-        
+
   id: "type-hierarchy",
   title: "Typography hierarchy",
   duration: "5 min",
@@ -321,7 +321,7 @@ practice: {
   },
 
 
-  
+
 {
   id: "colour-theory",
   title: "Colour Theory",
@@ -853,7 +853,7 @@ function NetworkArtwork() {
 }
 
 function App() {
-  
+
 const [page, setPageState] = useState("Discover");
 
 // PALETTE navigation history
@@ -1134,6 +1134,18 @@ const [jobForm, setJobForm] = useState({
   salary: "",
   workMode: "On-site",
 });
+// Employer verification application state
+const [employerForm, setEmployerForm] = useState({
+  companyName: "",
+  companyWebsite: "",
+  companyEmail: "",
+  jobTitle: "",
+  proofUrl: "",
+  notes: "",
+});
+
+const [employerSubmitBusy, setEmployerSubmitBusy] = useState(false);
+const [employerSubmitMessage, setEmployerSubmitMessage] = useState("");
 
 const [jobPostMessage, setJobPostMessage] = useState("");
 const [jobPostLoading, setJobPostLoading] = useState(false);
@@ -1407,6 +1419,64 @@ const handlePostJob = async (event) => {
   }
 };
 
+
+const handleEmployerVerificationSubmit = async (event) => {
+  event.preventDefault();
+
+  if (!token) {
+    setEmployerSubmitMessage("Please log in first.");
+    return;
+  }
+
+  setEmployerSubmitBusy(true);
+  setEmployerSubmitMessage("");
+
+  try {
+    const response = await fetch(
+      `${API}/users/employer-verification`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          companyName: employerForm.companyName.trim(),
+          companyWebsite: employerForm.companyWebsite.trim(),
+          companyEmail: employerForm.companyEmail.trim(),
+          jobTitle: employerForm.jobTitle.trim(),
+          proofUrl: employerForm.proofUrl.trim(),
+          notes: employerForm.notes.trim(),
+        }),
+      }
+    );
+
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      throw new Error(
+        result.message || "Could not submit employer verification."
+      );
+    }
+
+    setUser((previousUser) => ({
+      ...previousUser,
+      employerVerification: result.employerVerification,
+    }));
+
+    setEmployerSubmitMessage(
+      "Your employer verification request has been submitted successfully!"
+    );
+  } catch (error) {
+    setEmployerSubmitMessage(
+      error.message || "Could not submit your application."
+    );
+  } finally {
+    setEmployerSubmitBusy(false);
+  }
+};
+
+
 useEffect(() => {
   const fetchMarketJobs = async () => {
     setMarketJobsLoading(true);
@@ -1650,7 +1720,7 @@ const [editTools, setEditTools] = useState("");
   }, [token]);
 
   const loadSavedDesigns = useCallback(async () => {
-    
+
     try {
       const response = await fetch(`${API}/designs/saved`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -1666,7 +1736,7 @@ const [editTools, setEditTools] = useState("");
   }, [token]);
 
   const loadMyDesigns = useCallback(async () => {
-    
+
     try {
       const response = await fetch(`${API}/designs/my-designs`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -1791,7 +1861,7 @@ const loadExplorePage = useCallback(async (requestedPage = 1, append = false) =>
     }
   }, []);
 
-  
+
 
   useEffect(() => {
   if (!token) return;
@@ -2197,8 +2267,8 @@ async function handleImageUpload(event) {
       setPublishBusy(false);
     }
   }
-  
-  
+
+
 async function handleCreateComment(event) {
   event.preventDefault();
 
@@ -2895,7 +2965,7 @@ async function handleLike(design) {
     </button>
   ))}
 </nav>
-        
+
 <div className="header-actions">
   {user ? (
     <>
@@ -2971,7 +3041,7 @@ onClick={() => setProfileMenuOpen(!profileMenuOpen)}      >
     <>
 
 
-    
+
       <button
         type="button"
         className="profile-button"
@@ -3010,7 +3080,7 @@ onClick={() => setProfileMenuOpen(!profileMenuOpen)}      >
                 </div>
               </div>
 
-              
+
 <div
   className="hero-feature design-motion"
   role="img"
@@ -3219,7 +3289,7 @@ onClick={() => setProfileMenuOpen(!profileMenuOpen)}      >
           </section>
         )}
 
-        
+
         {page === "Following" && (
   <section className="inner-page">
     <div className="section-overline">
@@ -3685,7 +3755,7 @@ onClick={() => setProfileMenuOpen(!profileMenuOpen)}      >
   </article>
 ))}
         </div>
-        
+
               </div>
     )}
 
@@ -3820,7 +3890,7 @@ onClick={() => setProfileMenuOpen(!profileMenuOpen)}      >
       <p>No matching case studies found. Try another search.</p>
     )}
     {selectedMarketCaseStudy && (
-  <article 
+  <article
   ref={marketCaseStudyDetailRef}
   className="market-note learning-detail market-case-study-detail">
     <span className="section-overline">
@@ -3963,7 +4033,7 @@ onClick={() => setProfileMenuOpen(!profileMenuOpen)}      >
             <div className="learning-label">
               {application.job?.company || "Company"} /{" "}
               {application.job?.location || "Location"}
-              
+
             </div>
 
             <h2>
@@ -4017,13 +4087,222 @@ onClick={() => setProfileMenuOpen(!profileMenuOpen)}      >
         and thoughtful experiences to life.
       </p>
     </div>
+    {/* EMPLOYER VERIFICATION GATE */}
+    {user?.role !== "admin" &&
+      user?.employerVerification?.status !== "approved" && (
+        <>
+          {!token ? (
+            <div className="status-panel">
+              <div className="section-overline">PALETTE / EMPLOYERS</div>
+              <h2>Join the hiring community.</h2>
+              <p>
+                Log in to your PALETTE account to request permission to
+                publish opportunities for the design community.
+              </p>
+              <button
+                type="button"
+                className="button-dark"
+                onClick={() => {
+                  setAuthMode("login");
+                  setAuthOpen(true);
+                }}
+              >
+                LOG IN TO CONTINUE ↗
+              </button>
+            </div>
+          ) : !user ? (
+            <div className="status-panel" role="status">
+              <strong>Checking your account permissions...</strong>
+              <p>Please wait while PALETTE loads your profile.</p>
+            </div>
+          ) : user.employerVerification?.status === "pending" ? (
+            <div className="status-panel">
+              <div className="section-overline">EMPLOYER VERIFICATION</div>
+              <h2>Your application is under review.</h2>
+              <p>
+                Thank you for providing your company information. The
+                PALETTE administration team will review your request.
+                Job-posting access will be available after approval.
+              </p>
+              <span className="admin-role-pill">PENDING APPROVAL</span>
+            </div>
+          ) : user.employerVerification?.status === "revoked" ? (
+            <div className="status-panel status-error">
+              <div className="section-overline">EMPLOYER ACCESS</div>
+              <h2>Posting privileges revoked.</h2>
+              <p>
+                Your permission to publish jobs has been revoked. Please
+                contact PALETTE administration for assistance.
+              </p>
+              {user.employerVerification?.reviewNote && (
+                <p>
+                  Reason: {user.employerVerification.reviewNote}
+                </p>
+              )}
+            </div>
+          ) : (
+            <form
+              className="market-post-form"
+              onSubmit={handleEmployerVerificationSubmit}
+            >
+              <div className="market-form-section">
+                <div className="section-overline">
+                  PALETTE / EMPLOYER VERIFICATION
+                </div>
+                <h2>Build trust before you hire.</h2>
+                <p>
+                  Tell us about your organisation. Our team will review
+                  your company information before granting permission
+                  to publish jobs on PALETTE.
+                </p>
+                {user.employerVerification?.status === "rejected" && (
+                  <div className="status-panel status-error">
+                    <strong>Your previous request was not approved.</strong>
+                    <p>
+                      {user.employerVerification.reviewNote ||
+                        "You can submit updated information for another review."}
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              <div className="market-form-section">
+                <div className="market-form-section-heading">
+                  <span>01 / ORGANISATION DETAILS</span>
+                  <p>Tell us about your company and your role.</p>
+                </div>
+
+                <div className="market-form-grid">
+                  <label className="market-form-field">
+                    <span>COMPANY NAME *</span>
+                    <input
+                      required
+                      maxLength={160}
+                      value={employerForm.companyName}
+                      onChange={(event) =>
+                        setEmployerForm((previous) => ({
+                          ...previous,
+                          companyName: event.target.value,
+                        }))
+                      }
+                      placeholder="Your company name"
+                    />
+                  </label>
+
+                  <label className="market-form-field">
+                    <span>COMPANY WEBSITE *</span>
+                    <input
+                      type="url"
+                      required
+                      value={employerForm.companyWebsite}
+                      onChange={(event) =>
+                        setEmployerForm((previous) => ({
+                          ...previous,
+                          companyWebsite: event.target.value,
+                        }))
+                      }
+                      placeholder="https://company.com"
+                    />
+                  </label>
+
+                  <label className="market-form-field">
+                    <span>BUSINESS EMAIL *</span>
+                    <input
+                      type="email"
+                      required
+                      value={employerForm.companyEmail}
+                      onChange={(event) =>
+                        setEmployerForm((previous) => ({
+                          ...previous,
+                          companyEmail: event.target.value,
+                        }))
+                      }
+                      placeholder="you@company.com"
+                    />
+                  </label>
+
+                  <label className="market-form-field">
+                    <span>YOUR POSITION *</span>
+                    <input
+                      required
+                      maxLength={120}
+                      value={employerForm.jobTitle}
+                      onChange={(event) =>
+                        setEmployerForm((previous) => ({
+                          ...previous,
+                          jobTitle: event.target.value,
+                        }))
+                      }
+                      placeholder="e.g. Founder or HR Manager"
+                    />
+                  </label>
+
+                  <label className="market-form-field market-form-field-wide">
+                    <span>VERIFICATION PROOF URL *</span>
+                    <input
+                      type="url"
+                      required
+                      value={employerForm.proofUrl}
+                      onChange={(event) =>
+                        setEmployerForm((previous) => ({
+                          ...previous,
+                          proofUrl: event.target.value,
+                        }))
+                      }
+                      placeholder="https://..."
+                    />
+                    <small>
+                      Provide a company registration record, official
+                      company profile, or another source we can review.
+                      Use an HTTPS link.
+                    </small>
+                  </label>
+
+                  <label className="market-form-field market-form-field-wide">
+                    <span>ADDITIONAL INFORMATION</span>
+                    <textarea
+                      rows={4}
+                      maxLength={1000}
+                      value={employerForm.notes}
+                      onChange={(event) =>
+                        setEmployerForm((previous) => ({
+                          ...previous,
+                          notes: event.target.value,
+                        }))
+                      }
+                      placeholder="Tell us more about your organisation..."
+                    />
+                  </label>
+                </div>
+              </div>
+
+              {employerSubmitMessage && (
+                <p role="status" aria-live="polite">
+                  {employerSubmitMessage}
+                </p>
+              )}
+
+              <button
+                type="submit"
+                className="button-dark market-publish-button"
+                disabled={employerSubmitBusy}
+              >
+                {employerSubmitBusy
+                  ? "SUBMITTING REQUEST..."
+                  : "SUBMIT FOR VERIFICATION ↗"}
+              </button>
+            </form>
+          )}
+        </>
+      )}
 
     {/* JOB POSTING FORM */}
-    <form
-      className="market-post-form"
-      onSubmit={handlePostJob}
-    >
-
+    {(user?.role === "admin" ||
+      user?.employerVerification?.status === "approved") && (
+        <form
+          className="market-post-form"
+          onSubmit={handlePostJob}
+        >
       {/* SECTION 01 — OPPORTUNITY */}
       <div className="market-form-section">
         <div className="market-form-section-heading">
@@ -4208,6 +4487,7 @@ onClick={() => setProfileMenuOpen(!profileMenuOpen)}      >
       </div>
 
     </form>
+  )}
   </section>
 )}
 
@@ -4322,7 +4602,7 @@ onClick={() => setProfileMenuOpen(!profileMenuOpen)}      >
     </div>
   </div>
 )}
-                
+
                 <button
   type="button"
   className="profile-edit-trigger"
@@ -4365,7 +4645,7 @@ onClick={() => setProfileMenuOpen(!profileMenuOpen)}      >
                 <input value={designTitle} onChange={(event) => setDesignTitle(event.target.value)} required maxLength={120} placeholder="e.g. A calmer banking app" />
               </label>
 
-              
+
 <label>
   Upload an image from your device
   <input
@@ -4759,7 +5039,7 @@ onClick={() => setProfileMenuOpen(!profileMenuOpen)}      >
         </div>
       )}
 
-      
+
 {selectedMarketJob && (
   <div
     className="auth-backdrop"
@@ -4769,7 +5049,7 @@ onClick={() => setProfileMenuOpen(!profileMenuOpen)}      >
       }
     }}
   >
-    
+
 <section
   className="design-detail-panel market-job-detail-panel"
   role="dialog"
@@ -4982,7 +5262,7 @@ onClick={() => setProfileMenuOpen(!profileMenuOpen)}      >
             <p>By <strong>{selectedDesign.creator?.name || selectedDesign.creator?.username || "Community creator"}</strong></p>
             {selectedDesign.tools?.length > 0 && <p>Tools: {selectedDesign.tools.join(", ")}</p>}
             {selectedDesign.tags?.length > 0 && <div className="work-tags">{selectedDesign.tags.map((tag) => <span key={tag}>#{tag}</span>)}</div>}
-            
+
             <section className="comments-section" aria-labelledby="comments-heading">
   <div className="comments-heading-row">
     <h3 id="comments-heading">Conversation</h3>
