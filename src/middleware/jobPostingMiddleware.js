@@ -13,7 +13,7 @@ const canPostJobs = async (req, res, next) => {
     // Always check current permissions in MongoDB.
     // Never trust a role or approval status from the JWT.
     const user = await User.findById(req.user.userId)
-      .select("role employerVerification.status");
+  .select("role employerVerification.status employerVerification.companyName");
 
     if (!user) {
       return res.status(401).json({
@@ -21,6 +21,8 @@ const canPostJobs = async (req, res, next) => {
         message: "User account not found.",
       });
     }
+    // Make the verified database record available to job creation.
+req.jobPostingUser = user;
 
     // Administrators can publish jobs directly.
     if (user.role === "admin") {

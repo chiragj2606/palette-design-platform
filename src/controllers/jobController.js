@@ -79,9 +79,26 @@ const createJob = async (req, res) => {
       workMode,
     } = req.body;
 
+// Admins may publish on behalf of any company.
+// Approved employers must use their verified company name.
+const verifiedCompany =
+  req.jobPostingUser.role === "admin"
+    ? company
+    : req.jobPostingUser.employerVerification.companyName;
+
+if (
+  typeof verifiedCompany !== "string" ||
+  !verifiedCompany.trim()
+) {
+  return res.status(400).json({
+    success: false,
+    message: "A valid verified company name is required.",
+  });
+}
+
     const job = await Job.create({
       title,
-      company,
+      company: verifiedCompany.trim(),
       location,
       employmentType,
       experienceLevel,
