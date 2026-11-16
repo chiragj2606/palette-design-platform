@@ -37,6 +37,8 @@ export default function AdminDashboard({ token }) {
   const [overview, setOverview] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [exporting, setExporting] = useState("");
+const [exportError, setExportError] = useState("");
 
   const loadOverview = useCallback(async () => {
     if (!token) {
@@ -73,6 +75,82 @@ export default function AdminDashboard({ token }) {
     }
   }, [token]);
 
+
+const downloadExport = async (format) => {
+  const exports = {
+    excel: {
+      endpoint: "/admin/export/excel",
+      filename: "PALETTE_Full_Export.xlsx",
+    },
+    csv: {
+      endpoint: "/admin/export/csv",
+      filename: "PALETTE_Full_Export_CSV.zip",
+    },
+  };
+
+  const selectedExport = exports[format];
+
+  if (!selectedExport || !token) {
+    setExportError("Please log in as an administrator.");
+    return;
+  }
+
+  setExporting(format);
+  setExportError("");
+
+  try {
+    const response = await fetch(
+      `${API}${selectedExport.endpoint}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      let message = "Export failed. Please try again.";
+
+      const contentType =
+        response.headers.get("content-type") || "";
+
+      if (contentType.includes("application/json")) {
+        const result = await response.json();
+        message = result.message || message;
+      }
+
+      throw new Error(message);
+    }
+
+    const blob = await response.blob();
+
+    if (!blob.size) {
+      throw new Error("The export file is empty.");
+    }
+
+    const downloadUrl = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+
+    link.href = downloadUrl;
+    link.download = selectedExport.filename;
+
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+    window.setTimeout(() => {
+      window.URL.revokeObjectURL(downloadUrl);
+    }, 1000);
+  } catch (err) {
+    setExportError(
+      err.message || "Could not download the export."
+    );
+  } finally {
+    setExporting("");
+  }
+};
+
+
   useEffect(() => {
     loadOverview();
   }, [loadOverview]);
@@ -96,14 +174,40 @@ export default function AdminDashboard({ token }) {
           </p>
         </div>
 
-        <button
-          type="button"
-          className="button-outline admin-refresh-button"
-          onClick={loadOverview}
-          disabled={loading}
-        >
-          {loading ? "REFRESHING..." : "↻ REFRESH DATA"}
-        </button>
+        <div className="admin-dashboard-actions">
+  <button
+    type="button"
+    className="button-outline admin-export-button"
+    onClick={() => downloadExport("excel")}
+    disabled={Boolean(exporting)}
+  >
+    {exporting === "excel" ? "PREPARING..." : "↓ EXPORT EXCEL"}
+  </button>
+
+  <button
+    type="button"
+    className="button-outline admin-export-button"
+    onClick={() => downloadExport("csv")}
+    disabled={Boolean(exporting)}
+  >
+    {exporting === "csv" ? "PREPARING..." : "↓ EXPORT CSV"}
+  </button>
+
+  <button
+    type="button"
+    className="button-outline admin-refresh-button"
+    onClick={loadOverview}
+    disabled={loading}
+  >
+    {loading ? "REFRESHING..." : "↻ REFRESH DATA"}
+  </button>
+</div>
+
+{exportError && (
+  <p className="admin-inline-error" role="alert">
+    {exportError}
+  </p>
+)}
       </div>
 
       {loading && !overview ? (
